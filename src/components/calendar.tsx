@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import moment from "moment";
 
@@ -22,17 +22,18 @@ const CellContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(7, 1fr);
 `;
-const Cell = styled.div`
+const Cell = styled.div<{ isToday: boolean }>`
   height: 10rem;
   position: relative;
+  background-color: ${props => (props.isToday ? "#e8f5e9" : "transparent")};
   border: 1px solid #f3f4f9;
 `;
-const CellText = styled.p<{ passed: boolean }>`
+const CellText = styled.p`
   position: absolute;
   right: 1rem;
   top: 1rem;
   font-size: 1.7rem;
-  color: ${props => (props.passed ? "#b71c1c" : "#b8bac3")};
+  color: "#b8bac3";
 `;
 const StyledMonthPicker = styled.div`
   position: relative;
@@ -65,6 +66,17 @@ const ControlRight = styled.span`
   padding: 2rem 0;
   cursor: pointer;
 `;
+const StyledPicker = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+const H3 = styled.h3`
+  font-size: 1.5rem;
+  text-transform: capitalize;
+  font-weight: bold;
+  color: #212121;
+`;
 
 interface MonthPickerProps {
   month: string;
@@ -79,9 +91,9 @@ const MonthPicker: React.FC<MonthPickerProps> = ({
   return (
     <>
       <StyledMonthPicker>
-        <ControlLeft onClick={() => setPrevMonth()}>&larr;</ControlLeft>
+        <ControlLeft onClick={setPrevMonth}>&larr;</ControlLeft>
         {month}
-        <ControlRight onClick={() => setNextMonth()}>&rarr;</ControlRight>
+        <ControlRight onClick={setNextMonth}>&rarr;</ControlRight>
       </StyledMonthPicker>
     </>
   );
@@ -107,16 +119,26 @@ interface ICell {
 
 interface CalendarCellProps {
   days: Array<ICell>;
+  today: number;
   onClick?: () => void;
 }
 
-const CalendarCell: React.FC<CalendarCellProps> = ({ days }) => {
+const ID = () => {
+  return (
+    "_" +
+    Math.random()
+      .toString(36)
+      .substr(2, 9)
+  );
+};
+
+const CalendarCell: React.FC<CalendarCellProps> = ({ days, today }) => {
   return (
     <>
       <CellContainer>
         {days.map(({ day, passed }) => (
-          <Cell key={day}>
-            <CellText passed={passed}>{day}</CellText>
+          <Cell key={ID()} isToday={day === today}>
+            {!passed && <CellText>{day}</CellText>}
           </Cell>
         ))}
       </CellContainer>
@@ -125,7 +147,7 @@ const CalendarCell: React.FC<CalendarCellProps> = ({ days }) => {
 };
 
 const Calendar: React.FC<CalendarProps> = () => {
-  const [date, setDate] = React.useState(moment());
+  let [date, setDate] = useState(moment());
   const firstDayOfMonth = (): number => {
     const day = moment(date)
       .startOf("month")
@@ -134,21 +156,23 @@ const Calendar: React.FC<CalendarProps> = () => {
   };
   const daysInMonth = (): number[] => {
     const daysCount = moment(date).daysInMonth();
-    return Array.from(Array(daysCount).keys());
+    return Array.from(Array(daysCount), (_, i) => i + 1);
   };
-  const formattedDays = daysInMonth().map(day => {
+  const dayStart = firstDayOfMonth();
+  const days = [...Array<number>(dayStart).fill(0), ...daysInMonth()];
+  const formattedDays = days.map(day => {
     return {
-      day: day + 1,
-      passed: day + 1 < firstDayOfMonth()
+      day: day,
+      passed: day === 0
     };
   });
 
   const months = moment.months();
-  const [index, setIndex] = React.useState(moment(date).month());
+  let [index, setIndex] = React.useState(moment(date).month());
   const setNextMonth = () => {
     if (index < months.length - 1) {
       setIndex(index + 1);
-      setDate(moment(date).set("month", index));
+      setDate(date => moment(date).set("month", index + 1));
     } else {
       setIndex(months.length - 1);
       setDate(moment(date).set("month", index));
@@ -157,22 +181,26 @@ const Calendar: React.FC<CalendarProps> = () => {
   const setPrevMonth = () => {
     if (index > 0) {
       setIndex(index - 1);
-      setDate(moment(date).set("month", index));
+      setDate(date => moment(date).set("month", index - 1));
     } else {
       setIndex(0);
       setDate(moment(date).set("month", index));
     }
   };
+  const todayDate = parseInt(date.format("D"));
 
   return (
     <StyledCalendar>
-      <MonthPicker
-        month={months[index]}
-        setPrevMonth={setPrevMonth}
-        setNextMonth={setNextMonth}
-      />
+      <StyledPicker>
+        <H3>task calendar</H3>
+        <MonthPicker
+          month={months[index]}
+          setPrevMonth={setPrevMonth}
+          setNextMonth={setNextMonth}
+        />
+      </StyledPicker>
       <CalendarHeader />
-      <CalendarCell days={formattedDays} />
+      <CalendarCell days={formattedDays} today={todayDate} />
     </StyledCalendar>
   );
 };
