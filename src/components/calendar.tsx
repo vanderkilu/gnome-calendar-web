@@ -50,6 +50,7 @@ const StyledPicker = styled.div`
   &:not(:last-child) {
     margin-right: 1rem;
   }
+  cursor: pointer;
 `;
 const ControlLeft = styled.span`
   position: absolute;
@@ -86,23 +87,76 @@ const StyledPickerGroup = styled.div`
   align-items: center;
 `;
 
-interface PickerProps {
+const StyledDropdown = styled.div`
+  position: absolute;
+  top: 3.2rem;
+  left: auto;
+  width: 100%;
+  height: 10rem;
+  overflow-y: scroll;
+  background-color: #fafafa;
+  display: grid;
+  grid-template-columns: 1fr;
+  padding: 2rem;
+  grid-gap: 2rem;
+  z-index: 1;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
+const StyledDropdownItem = styled.button`
+  font: inherit;
+  border-radius: 3px;
+  text-align: center;
+  height: 3rem;
+  background-color: #ffffff;
+  border: none;
+  border: 1px dashed #bdbdbd;
+  color: #b8bac3;
+  cursor: pointer;
+`;
+
+interface PickerProps<T> {
+  valueList: T[];
   value: string | number;
-  setNext: () => void;
-  setPrev: () => void;
+  setNext: (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => void;
+  setPrev: (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => void;
 }
 
-const Picker: React.FC<PickerProps> = ({ value, setNext, setPrev }) => {
+const Picker: React.FC<PickerProps<string | number>> = ({
+  value,
+  setNext,
+  setPrev,
+  valueList
+}) => {
+  const [isVisible, setVisible] = useState(false);
   return (
     <>
-      <StyledPicker>
-        <ControlLeft onClick={setPrev} role="button">
+      <StyledPicker onClick={() => setVisible(isVisible => !isVisible)}>
+        <ControlLeft
+          onClick={(e: React.MouseEvent<HTMLSpanElement, MouseEvent>) =>
+            setPrev(e)
+          }
+          role="button"
+        >
           &larr;
         </ControlLeft>
         {value}
-        <ControlRight onClick={setNext} role="button">
+        <ControlRight
+          onClick={(e: React.MouseEvent<HTMLSpanElement, MouseEvent>) =>
+            setNext(e)
+          }
+          role="button"
+        >
           &rarr;
         </ControlRight>
+        {isVisible && (
+          <StyledDropdown>
+            {valueList.map(value => (
+              <StyledDropdownItem>{value}</StyledDropdownItem>
+            ))}
+          </StyledDropdown>
+        )}
       </StyledPicker>
     </>
   );
@@ -178,7 +232,8 @@ const Calendar: React.FC<CalendarProps> = () => {
 
   const months = moment.months();
   let [index, setIndex] = useState(moment(date).month());
-  const setNextMonth = () => {
+  const setNextMonth = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
+    e.stopPropagation();
     if (index < months.length - 1) {
       setIndex(index + 1);
       setDate(date => moment(date).set("month", index + 1));
@@ -187,7 +242,8 @@ const Calendar: React.FC<CalendarProps> = () => {
       setDate(moment(date).set("month", index));
     }
   };
-  const setPrevMonth = () => {
+  const setPrevMonth = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
+    e.stopPropagation();
     if (index > 0) {
       setIndex(index - 1);
       setDate(date => moment(date).set("month", index - 1));
@@ -223,7 +279,8 @@ const Calendar: React.FC<CalendarProps> = () => {
   const nextYears = yearRange(getCurrentYear(), nextTen);
   const [year, setYear] = useState(parseInt(getCurrentYear()));
 
-  const setNextYear = () => {
+  const setNextYear = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
+    e.stopPropagation();
     if (year < parseInt(nextTen)) {
       setYear(year + 1);
       setDate(moment(date).set("year", year + 1));
@@ -233,7 +290,8 @@ const Calendar: React.FC<CalendarProps> = () => {
     }
   };
 
-  const setPrevYear = () => {
+  const setPrevYear = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
+    e.stopPropagation();
     const currentYear = parseInt(getCurrentYear());
     if (year > currentYear) {
       setYear(year - 1);
@@ -250,11 +308,17 @@ const Calendar: React.FC<CalendarProps> = () => {
         <H3>task calendar</H3>
         <StyledPickerGroup>
           <Picker
+            valueList={months}
             value={months[index]}
             setPrev={setPrevMonth}
             setNext={setNextMonth}
           />
-          <Picker value={year} setPrev={setPrevYear} setNext={setNextYear} />
+          <Picker
+            value={year}
+            setPrev={setPrevYear}
+            setNext={setNextYear}
+            valueList={nextYears}
+          />
         </StyledPickerGroup>
       </StyledPickerWrapper>
       <CalendarHeader />
