@@ -35,7 +35,7 @@ const CellText = styled.p`
   font-size: 1.7rem;
   color: "#b8bac3";
 `;
-const StyledMonthPicker = styled.div`
+const StyledPicker = styled.div`
   position: relative;
   width: 15rem;
   height: 3rem;
@@ -47,6 +47,9 @@ const StyledMonthPicker = styled.div`
   justify-content: center;
   align-items: center;
   text-transform: capitalize;
+  &:not(:last-child) {
+    margin-right: 1rem;
+  }
 `;
 const ControlLeft = styled.span`
   position: absolute;
@@ -66,7 +69,7 @@ const ControlRight = styled.span`
   padding: 2rem 0;
   cursor: pointer;
 `;
-const StyledPicker = styled.div`
+const StyledPickerWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -77,24 +80,30 @@ const H3 = styled.h3`
   font-weight: bold;
   color: #212121;
 `;
+const StyledPickerGroup = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+`;
 
-interface MonthPickerProps {
-  month: string;
-  setNextMonth: () => void;
-  setPrevMonth: () => void;
+interface PickerProps {
+  value: string | number;
+  setNext: () => void;
+  setPrev: () => void;
 }
-const MonthPicker: React.FC<MonthPickerProps> = ({
-  month,
-  setNextMonth,
-  setPrevMonth
-}) => {
+
+const Picker: React.FC<PickerProps> = ({ value, setNext, setPrev }) => {
   return (
     <>
-      <StyledMonthPicker>
-        <ControlLeft onClick={setPrevMonth}>&larr;</ControlLeft>
-        {month}
-        <ControlRight onClick={setNextMonth}>&rarr;</ControlRight>
-      </StyledMonthPicker>
+      <StyledPicker>
+        <ControlLeft onClick={setPrev} role="button">
+          &larr;
+        </ControlLeft>
+        {value}
+        <ControlRight onClick={setNext} role="button">
+          &rarr;
+        </ControlRight>
+      </StyledPicker>
     </>
   );
 };
@@ -168,7 +177,7 @@ const Calendar: React.FC<CalendarProps> = () => {
   });
 
   const months = moment.months();
-  let [index, setIndex] = React.useState(moment(date).month());
+  let [index, setIndex] = useState(moment(date).month());
   const setNextMonth = () => {
     if (index < months.length - 1) {
       setIndex(index + 1);
@@ -189,16 +198,65 @@ const Calendar: React.FC<CalendarProps> = () => {
   };
   const todayDate = parseInt(date.format("D"));
 
+  const getCurrentYear = () => moment().format("Y");
+
+  const yearRange = (start: string, end: string) => {
+    let startDate = moment(start);
+    const endDate = moment(end);
+    let nextYears: string[] = [];
+    while (startDate < endDate) {
+      nextYears = [
+        ...nextYears,
+        moment(startDate)
+          .format("YYYY")
+          .toString()
+      ];
+      startDate = moment(startDate).add("year", 1);
+    }
+    return nextYears;
+  };
+  const nextTen = moment()
+    .set("year", parseInt(getCurrentYear()))
+    .add("year", 12)
+    .format("Y");
+
+  const nextYears = yearRange(getCurrentYear(), nextTen);
+  const [year, setYear] = useState(parseInt(getCurrentYear()));
+
+  const setNextYear = () => {
+    if (year < parseInt(nextTen)) {
+      setYear(year + 1);
+      setDate(moment(date).set("year", year + 1));
+    } else {
+      setYear(parseInt(nextTen));
+      setDate(moment(date).set("year", parseInt(nextTen)));
+    }
+  };
+
+  const setPrevYear = () => {
+    const currentYear = parseInt(getCurrentYear());
+    if (year > currentYear) {
+      setYear(year - 1);
+      setDate(moment(date).set("year", year - 1));
+    } else {
+      setYear(year);
+      setDate(moment(date).set("year", year));
+    }
+  };
+
   return (
     <StyledCalendar>
-      <StyledPicker>
+      <StyledPickerWrapper>
         <H3>task calendar</H3>
-        <MonthPicker
-          month={months[index]}
-          setPrevMonth={setPrevMonth}
-          setNextMonth={setNextMonth}
-        />
-      </StyledPicker>
+        <StyledPickerGroup>
+          <Picker
+            value={months[index]}
+            setPrev={setPrevMonth}
+            setNext={setNextMonth}
+          />
+          <Picker value={year} setPrev={setPrevYear} setNext={setNextYear} />
+        </StyledPickerGroup>
+      </StyledPickerWrapper>
       <CalendarHeader />
       <CalendarCell days={formattedDays} today={todayDate} />
     </StyledCalendar>
