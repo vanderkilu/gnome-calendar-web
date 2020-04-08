@@ -8,6 +8,8 @@ const StyledForm = styled.form`
 const StyledLabel = styled.label`
   font-size: 1.5rem;
   margin-bottom: 0.5rem;
+  color: #616161;
+  font-weight: 600;
 `;
 const StyledInputGroup = styled.div`
   margin: 1rem 0;
@@ -16,12 +18,16 @@ const StyledInputGroup = styled.div`
   align-items: flex-start;
 `;
 const StyledInput = styled.input`
-  padding: 1rem;
+  padding: 1.5rem 1rem;
   font: inherit;
   border: none;
-  border-radius: 6px;
-  border: 1px solid #f3f4f9;
+  border-radius: 3px;
+  border: 1px solid #e0e0e0;
   width: 100%;
+  &::placeholder {
+    font-size: 1.4rem;
+    color: #bdbdbd;
+  }
 `;
 
 const Form: React.FC<{}> = () => {
@@ -30,7 +36,7 @@ const Form: React.FC<{}> = () => {
       <StyledForm>
         <StyledInputGroup>
           <StyledLabel>Name</StyledLabel>
-          <StyledInput placeholder="enter today" />
+          <StyledInput placeholder="enter task name" />
         </StyledInputGroup>
         <StyledInputGroup>
           <StyledLabel>Duration</StyledLabel>

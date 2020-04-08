@@ -26,7 +26,7 @@ const StyledModal = styled.form`
 const StyledHeader = styled.div`
   display: flex;
   justify-content: flex-end;
-  padding: 2rem;
+  padding: 1rem;
   font-size: 1.7rem;
 `;
 
@@ -38,7 +38,7 @@ const StyledIcon = styled.img`
 `;
 
 const StyledContent = styled.div`
-  padding: 2rem;
+  padding: 0 2rem;
   margin: 1rem 0;
 `;
 
