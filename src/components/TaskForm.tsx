@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useReducer } from "react";
 import styled from "styled-components";
 import TaskModal from "./TaskModal";
 
@@ -18,11 +18,13 @@ const StyledInputGroup = styled.div`
   align-items: flex-start;
 `;
 const StyledInput = styled.input`
-  padding: 1.5rem 1rem;
+  padding: 1.2rem 1rem;
   font: inherit;
   border: none;
   border-radius: 3px;
   border: 1px solid #e0e0e0;
+  color: #616161;
+  font-size: 1.4rem;
   width: 100%;
   &::placeholder {
     font-size: 1.4rem;
@@ -30,32 +32,105 @@ const StyledInput = styled.input`
   }
 `;
 
-const Form: React.FC<{}> = () => {
+interface ITask {
+  name?: string;
+  duration?: string;
+  startTime?: string;
+}
+
+type ChangeEventType = React.ChangeEvent<HTMLInputElement>;
+
+interface FormProps {
+  task: ITask;
+  onInputChange: (event: ChangeEventType) => void;
+}
+
+const Form: React.FC<FormProps> = ({ task, onInputChange }) => {
   return (
     <>
       <StyledForm>
         <StyledInputGroup>
           <StyledLabel>Name</StyledLabel>
-          <StyledInput placeholder="enter task name" />
+          <StyledInput
+            placeholder="enter task name"
+            name="task"
+            value={task.name}
+            onChange={(e: ChangeEventType) => onInputChange(e)}
+          />
         </StyledInputGroup>
         <StyledInputGroup>
           <StyledLabel>Duration</StyledLabel>
-          <StyledInput placeholder="enter duration" />
+          <StyledInput
+            placeholder="enter duration"
+            name="duration"
+            value={task.duration}
+            onChange={(e: ChangeEventType) => onInputChange(e)}
+          />
         </StyledInputGroup>
         <StyledInputGroup>
           <StyledLabel>Start Time </StyledLabel>
-          <StyledInput placeholder="enter start time" />
+          <StyledInput
+            placeholder="enter start time"
+            name="startTime"
+            value={task.startTime}
+            onChange={(e: ChangeEventType) => onInputChange(e)}
+          />
         </StyledInputGroup>
       </StyledForm>
     </>
   );
 };
 
+type Action =
+  | { type: "NAME"; payload: string }
+  | { type: "DURATION"; payload: string }
+  | { type: "STARTTIME"; payload: string };
+
+const setTaskReducer = (state: ITask, action: Action) => {
+  switch (action.type) {
+    case "NAME":
+      return {
+        ...state,
+        name: action.payload
+      };
+    case "DURATION":
+      return {
+        ...state,
+        duration: action.payload
+      };
+    case "STARTTIME":
+      return {
+        ...state,
+        startTime: action.payload
+      };
+  }
+};
+
 const TaskForm: React.FC<{}> = () => {
+  const [isModalVisible, setModalVisible] = useState(true);
+  const [task, setTask] = useReducer(setTaskReducer, {
+    name: "",
+    duration: "",
+    startTime: ""
+  });
+  const toggleModalVisibility = () => {
+    setModalVisible(isVisible => !isVisible);
+  };
+  const saveTask = () => console.log("task", task);
+  const handleInputChange = (e: ChangeEventType) => {
+    const { name, value } = e.target;
+    const type =
+      name === "task" ? "NAME" : name === "duration" ? "DURATION" : "STARTTIME";
+    setTask({ type, payload: value });
+  };
   return (
     <>
-      <TaskModal>
-        <Form />
+      <TaskModal
+        isOpen={isModalVisible}
+        onClose={toggleModalVisibility}
+        onSave={saveTask}
+      >
+        <Form task={task} onInputChange={handleInputChange} />
       </TaskModal>
     </>
   );

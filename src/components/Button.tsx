@@ -18,12 +18,13 @@ interface ButtonProps {
   text: string;
   color?: string | undefined;
   size?: number;
+  onClick: () => void;
 }
 
-const Button: React.FC<ButtonProps> = ({ text, color, size }) => {
+const Button: React.FC<ButtonProps> = ({ text, color, size, onClick }) => {
   return (
     <>
-      <StyledButton color={color} size={size}>
+      <StyledButton color={color} size={size} onClick={onClick}>
         {text}
       </StyledButton>
     </>

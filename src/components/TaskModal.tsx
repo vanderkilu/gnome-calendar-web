@@ -5,14 +5,17 @@ import Button from "./Button";
 
 const StyledContainer = styled.div`
   position: fixed;
+  top: 0;
+  left: 0;
   height: 100%;
   width: 100%;
   background-color: rgba(0, 0, 0, 0.1);
+  z-index: 50;
 `;
 
-const StyledModal = styled.form`
+const StyledModal = styled.div`
   position: absolute;
-  width: 50rem;
+  width: 40rem;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -32,7 +35,7 @@ const StyledHeader = styled.div`
 
 const StyledIcon = styled.img`
   padding: 0.8rem;
-  background-color: #fcd0dd;
+  background-color: #fccdec;
   border-radius: 5px;
   width: 1.2rem;
 `;
@@ -47,20 +50,33 @@ const StyledFooter = styled.div`
   justify-content: flex-end;
 `;
 
-const TaskModal: React.FC<{}> = ({ children }) => {
+interface TaskModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSave: () => void;
+}
+
+const TaskModal: React.FC<TaskModalProps> = ({
+  children,
+  isOpen,
+  onClose,
+  onSave
+}) => {
   return (
     <>
-      <StyledContainer>
-        <StyledModal>
-          <StyledHeader>
-            <StyledIcon alt="close icon" src={closeIcon}></StyledIcon>
-          </StyledHeader>
-          <StyledContent>{children}</StyledContent>
-          <StyledFooter>
-            <Button text="save" />
-          </StyledFooter>
-        </StyledModal>
-      </StyledContainer>
+      {isOpen && (
+        <StyledContainer>
+          <StyledModal>
+            <StyledHeader>
+              <StyledIcon alt="close icon" src={closeIcon} onClick={onClose} />
+            </StyledHeader>
+            <StyledContent>{children}</StyledContent>
+            <StyledFooter>
+              <Button text="save" onClick={onSave} />
+            </StyledFooter>
+          </StyledModal>
+        </StyledContainer>
+      )}
     </>
   );
 };
