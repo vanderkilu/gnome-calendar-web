@@ -32,7 +32,7 @@ const StyledInput = styled.input`
   }
 `;
 
-interface ITask {
+export interface ITask {
   name?: string;
   duration?: string;
   startTime?: string;
@@ -106,17 +106,18 @@ const setTaskReducer = (state: ITask, action: Action) => {
   }
 };
 
-const TaskForm: React.FC<{}> = () => {
-  const [isModalVisible, setModalVisible] = useState(true);
+interface TaskFormProps {
+  isVisible: boolean;
+  onClose: () => void;
+  onSave: () => void;
+}
+
+const TaskForm: React.FC<TaskFormProps> = ({ isVisible, onClose, onSave }) => {
   const [task, setTask] = useReducer(setTaskReducer, {
     name: "",
     duration: "",
     startTime: ""
   });
-  const toggleModalVisibility = () => {
-    setModalVisible(isVisible => !isVisible);
-  };
-  const saveTask = () => console.log("task", task);
   const handleInputChange = (e: ChangeEventType) => {
     const { name, value } = e.target;
     const type =
@@ -125,11 +126,7 @@ const TaskForm: React.FC<{}> = () => {
   };
   return (
     <>
-      <TaskModal
-        isOpen={isModalVisible}
-        onClose={toggleModalVisibility}
-        onSave={saveTask}
-      >
+      <TaskModal isOpen={isVisible} onClose={onClose} onSave={onSave}>
         <Form task={task} onInputChange={handleInputChange} />
       </TaskModal>
     </>

@@ -1,9 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import moment from "moment";
-
-interface CalendarProps {}
-
 const StyledCalendar = styled.div`
   padding: 5rem;
 `;
@@ -183,7 +180,7 @@ interface ICell {
 interface CalendarCellProps {
   days: Array<ICell>;
   today: number;
-  onClick?: () => void;
+  onClick: (day: number) => void;
 }
 
 const ID = () => {
@@ -195,12 +192,24 @@ const ID = () => {
   );
 };
 
-const CalendarCell: React.FC<CalendarCellProps> = ({ days, today }) => {
+const CalendarCell: React.FC<CalendarCellProps> = ({
+  days,
+  today,
+  onClick
+}) => {
+  const handleClick = (passed: boolean) => {
+    if (passed) return null;
+    onClick(today);
+  };
   return (
     <>
       <CellContainer>
         {days.map(({ day, passed }) => (
-          <Cell key={ID()} isToday={day === today}>
+          <Cell
+            key={ID()}
+            isToday={day === today}
+            onClick={() => handleClick(passed)}
+          >
             {!passed && <CellText>{day}</CellText>}
           </Cell>
         ))}
@@ -209,7 +218,11 @@ const CalendarCell: React.FC<CalendarCellProps> = ({ days, today }) => {
   );
 };
 
-const Calendar: React.FC<CalendarProps> = () => {
+interface CalendarProps {
+  onClick: (day: number) => void;
+}
+
+const Calendar: React.FC<CalendarProps> = ({ onClick }) => {
   let [date, setDate] = useState(moment());
   const firstDayOfMonth = (): number => {
     const day = moment(date)
@@ -322,7 +335,7 @@ const Calendar: React.FC<CalendarProps> = () => {
         </StyledPickerGroup>
       </StyledPickerWrapper>
       <CalendarHeader />
-      <CalendarCell days={formattedDays} today={todayDate} />
+      <CalendarCell days={formattedDays} today={todayDate} onClick={onClick} />
     </StyledCalendar>
   );
 };
