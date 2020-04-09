@@ -109,7 +109,7 @@ const setTaskReducer = (state: ITask, action: Action) => {
 interface TaskFormProps {
   isVisible: boolean;
   onClose: () => void;
-  onSave: () => void;
+  onSave: (task: ITask) => void;
 }
 
 const TaskForm: React.FC<TaskFormProps> = ({ isVisible, onClose, onSave }) => {
@@ -126,7 +126,11 @@ const TaskForm: React.FC<TaskFormProps> = ({ isVisible, onClose, onSave }) => {
   };
   return (
     <>
-      <TaskModal isOpen={isVisible} onClose={onClose} onSave={onSave}>
+      <TaskModal
+        isOpen={isVisible}
+        onClose={onClose}
+        onSave={() => onSave(task)}
+      >
         <Form task={task} onInputChange={handleInputChange} />
       </TaskModal>
     </>

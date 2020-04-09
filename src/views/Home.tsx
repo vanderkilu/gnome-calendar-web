@@ -16,7 +16,10 @@ const HomePage: React.FC<{}> = () => {
     toggleFormShow();
     setDay(day);
   };
-  const addTask = () => null;
+  const handleOnSave = (task: ITask) => {
+    console.log("Task", task, day);
+    toggleFormShow();
+  };
 
   return (
     <>
@@ -24,7 +27,7 @@ const HomePage: React.FC<{}> = () => {
       <TaskForm
         isVisible={isFormVisible}
         onClose={toggleFormShow}
-        onSave={addTask}
+        onSave={handleOnSave}
       />
     </>
   );
