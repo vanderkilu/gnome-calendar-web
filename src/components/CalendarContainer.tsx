@@ -14,6 +14,15 @@ const H3 = styled.h3`
   color: #212121;
 `;
 
+const ID = () => {
+  return (
+    "_" +
+    Math.random()
+      .toString(36)
+      .substr(2, 9)
+  );
+};
+
 interface CalendarContainerProps {
   onClick: (day: number) => void;
 }
@@ -29,8 +38,8 @@ const CalendarContainer: React.FC<CalendarContainerProps> = ({ onClick }) => {
       <StyledPickerWrapper>
         <H3>task calendar</H3>
         <StyledPickerGroup>
-          <Picker date={date} type="month" setDate={updateDate} />
-          <Picker date={date} type="year" setDate={updateDate} />
+          <Picker date={date} type="month" setDate={updateDate} key={ID()} />
+          <Picker date={date} type="year" setDate={updateDate} key={ID()} />
         </StyledPickerGroup>
       </StyledPickerWrapper>
       <Calendar date={date} onClick={onClick} />
