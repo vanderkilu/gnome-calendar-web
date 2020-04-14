@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import TaskForm, { ITask } from "../components/TaskForm";
-import Calendar from "../components/Calendar";
+import CalendarContainer from "../components/CalendarContainer";
 
 interface IEvent {
   task: ITask;
@@ -23,7 +23,7 @@ const HomePage: React.FC<{}> = () => {
 
   return (
     <>
-      <Calendar onClick={handleOnClick} />
+      <CalendarContainer onClick={handleOnClick} />
       <TaskForm
         isVisible={isFormVisible}
         onClose={toggleFormShow}

@@ -1,10 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import moment from "moment";
-import { Picker } from "./CalendarContainer";
-const StyledCalendar = styled.div`
-  padding: 5rem;
-`;
+
 const Header = styled.div`
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -32,22 +29,6 @@ const CellText = styled.p`
   top: 1rem;
   font-size: 1.7rem;
   color: "#b8bac3";
-`;
-const StyledPickerWrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-const H3 = styled.h3`
-  font-size: 1.5rem;
-  text-transform: capitalize;
-  font-weight: bold;
-  color: #212121;
-`;
-const StyledPickerGroup = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
 `;
 
 const CalendarHeader: React.FC<{}> = () => {
@@ -111,10 +92,10 @@ const CalendarCell: React.FC<CalendarCellProps> = ({
 
 interface CalendarProps {
   onClick: (day: number) => void;
+  date: moment.Moment;
 }
 
-const Calendar: React.FC<CalendarProps> = ({ onClick }) => {
-  let [date, setDate] = useState(moment());
+const Calendar: React.FC<CalendarProps> = ({ date, onClick }) => {
   const firstDayOfMonth = (): number => {
     const day = moment(date)
       .startOf("month")
@@ -134,22 +115,12 @@ const Calendar: React.FC<CalendarProps> = ({ onClick }) => {
     };
   });
   const todayDate = parseInt(date.format("D"));
-  const updateDate = (type: moment.unitOfTime.All, index: number) => {
-    setDate(moment(date).set(type, index));
-  };
 
   return (
-    <StyledCalendar>
-      <StyledPickerWrapper>
-        <H3>task calendar</H3>
-        <StyledPickerGroup>
-          <Picker date={date} type="month" setDate={updateDate} />
-          <Picker date={date} type="year" setDate={updateDate} />
-        </StyledPickerGroup>
-      </StyledPickerWrapper>
+    <>
       <CalendarHeader />
       <CalendarCell days={formattedDays} today={todayDate} onClick={onClick} />
-    </StyledCalendar>
+    </>
   );
 };
 
