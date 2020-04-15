@@ -44,15 +44,28 @@ const CalendarHeader: React.FC<{}> = () => {
   );
 };
 
+export interface ITask {
+  name?: string;
+  duration?: string;
+  startTime?: string;
+}
+
+interface IEvent {
+  task: ITask;
+  date: string;
+}
+
 interface ICell {
   day: number;
   passed: boolean;
+  dateStr: string;
+  event: IEvent | undefined;
 }
 
 interface CalendarCellProps {
   days: Array<ICell>;
   today: number;
-  onClick: (day: number) => void;
+  onClick: (dayStr: string) => void;
 }
 
 const ID = () => {
@@ -69,20 +82,23 @@ const CalendarCell: React.FC<CalendarCellProps> = ({
   today,
   onClick
 }) => {
-  const handleClick = (passed: boolean) => {
+  const handleClick = (passed: boolean, dateStr: string) => {
     if (passed) return null;
-    onClick(today);
+    onClick(dateStr);
   };
   return (
     <>
       <CellContainer>
-        {days.map(({ day, passed }) => (
+        {days.map(({ day, passed, dateStr, event }) => (
           <Cell
             key={ID()}
             isToday={day === today}
-            onClick={() => handleClick(passed)}
+            onClick={() => handleClick(passed, dateStr)}
           >
             {!passed && <CellText>{day}</CellText>}
+            {!passed && (
+              <CellText>{event && event.task && event.task.name}</CellText>
+            )}
           </Cell>
         ))}
       </CellContainer>
@@ -91,11 +107,12 @@ const CalendarCell: React.FC<CalendarCellProps> = ({
 };
 
 interface CalendarProps {
-  onClick: (day: number) => void;
+  onClick: (date: string) => void;
   date: moment.Moment;
+  events: IEvent[];
 }
 
-const Calendar: React.FC<CalendarProps> = ({ date, onClick }) => {
+const Calendar: React.FC<CalendarProps> = ({ date, onClick, events }) => {
   const firstDayOfMonth = (): number => {
     const day = moment(date)
       .startOf("month")
@@ -108,18 +125,34 @@ const Calendar: React.FC<CalendarProps> = ({ date, onClick }) => {
   };
   const dayStart = firstDayOfMonth();
   const days = [...Array<number>(dayStart).fill(0), ...daysInMonth()];
+  const dayDate = (day: number) => {
+    return moment(date)
+      .set("date", day)
+      .toString();
+  };
   const formattedDays = days.map(day => {
+    const dateStr = dayDate(day);
+    const event = events.find(event => event.date === dateStr);
     return {
       day: day,
-      passed: day === 0
+      passed: day === 0,
+      event,
+      dateStr
     };
   });
   const todayDate = parseInt(date.format("D"));
+  const handleClick = (dayStr: string) => {
+    onClick(dayStr);
+  };
 
   return (
     <>
       <CalendarHeader />
-      <CalendarCell days={formattedDays} today={todayDate} onClick={onClick} />
+      <CalendarCell
+        days={formattedDays}
+        today={todayDate}
+        onClick={handleClick}
+      />
     </>
   );
 };

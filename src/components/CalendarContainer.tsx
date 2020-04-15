@@ -23,11 +23,26 @@ const ID = () => {
   );
 };
 
-interface CalendarContainerProps {
-  onClick: (day: number) => void;
+export interface ITask {
+  name?: string;
+  duration?: string;
+  startTime?: string;
 }
 
-const CalendarContainer: React.FC<CalendarContainerProps> = ({ onClick }) => {
+interface IEvent {
+  task: ITask;
+  date: string;
+}
+
+interface CalendarContainerProps {
+  onClick: (date: string) => void;
+  events: IEvent[];
+}
+
+const CalendarContainer: React.FC<CalendarContainerProps> = ({
+  onClick,
+  events
+}) => {
   const [date, setDate] = useState(moment());
   const updateDate = (type: moment.unitOfTime.All, index: number) => {
     setDate(moment(date).set(type, index));
@@ -42,7 +57,7 @@ const CalendarContainer: React.FC<CalendarContainerProps> = ({ onClick }) => {
           <Picker date={date} type="year" setDate={updateDate} key={ID()} />
         </StyledPickerGroup>
       </StyledPickerWrapper>
-      <Calendar date={date} onClick={onClick} />
+      <Calendar date={date} onClick={onClick} events={events} />
     </StyledCalendarContainer>
   );
 };
