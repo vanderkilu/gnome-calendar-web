@@ -82,6 +82,7 @@ interface IPosition {
   right: number;
   left: number;
   width: number;
+  bottom: number;
 }
 
 interface CellProps {

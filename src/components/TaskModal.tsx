@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useLayoutEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import closeIcon from "../assets/close.svg";
 import Button from "./Button";
@@ -13,11 +13,14 @@ const StyledContainer = styled.div`
   z-index: 50;
 `;
 
-const StyledModal = styled.div`
-  position: absolute;
+const StyledModal = styled.div<{
+  x: number | undefined;
+  y: number | undefined;
+}>`
+  position: relative;
   width: 40rem;
-  top: 50%;
-  left: 50%;
+  top: ${props => (props.y ? props.y + "px" : "50%")};
+  left: ${props => (props.x ? props.x + "px" : "50%")};
   transform: translate(-50%, -50%);
   background-color: #ffffffff;
   border-radius: 6px;
@@ -54,19 +57,53 @@ interface TaskModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSave: () => void;
+  position?: IPosition;
+}
+
+interface IPosition {
+  top: number;
+  right: number;
+  left: number;
+  width: number;
+  bottom: number;
 }
 
 const TaskModal: React.FC<TaskModalProps> = ({
   children,
   isOpen,
   onClose,
-  onSave
+  onSave,
+  position
 }) => {
+  const modalRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [pos, setPos] = useState({ x: 0, y: 0 });
+  useLayoutEffect(() => {
+    if (position && modalRef.current && containerRef.current) {
+      const modalHeight = modalRef.current.getBoundingClientRect().height;
+      const modalWidth = modalRef.current.getBoundingClientRect().width;
+      const containerWidth = containerRef.current.getBoundingClientRect().width;
+      const containerHeight = containerRef.current.getBoundingClientRect()
+        .height;
+      let x = position.left + position.width / 2;
+      let y = position.bottom + modalHeight / 2;
+      if (x + modalWidth > containerWidth) {
+        x = x - modalWidth / 2 + position.width / 2;
+      }
+      if (x - modalWidth / 2 <= 0) {
+        x = position.right;
+      }
+      if (y + modalHeight / 2 > containerHeight) {
+        y = position.bottom - modalHeight / 2;
+      }
+      setPos({ x, y });
+    }
+  }, [position]);
   return (
     <>
       {isOpen && (
-        <StyledContainer>
-          <StyledModal>
+        <StyledContainer ref={containerRef}>
+          <StyledModal ref={modalRef} x={pos.x} y={pos.y}>
             <StyledHeader>
               <StyledIcon alt="close icon" src={closeIcon} onClick={onClose} />
             </StyledHeader>

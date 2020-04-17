@@ -106,13 +106,27 @@ const setTaskReducer = (state: ITask, action: Action) => {
   }
 };
 
+interface IPosition {
+  top: number;
+  right: number;
+  left: number;
+  width: number;
+  bottom: number;
+}
+
 interface TaskFormProps {
   isVisible: boolean;
   onClose: () => void;
   onSave: (task: ITask) => void;
+  position?: IPosition;
 }
 
-const TaskForm: React.FC<TaskFormProps> = ({ isVisible, onClose, onSave }) => {
+const TaskForm: React.FC<TaskFormProps> = ({
+  isVisible,
+  onClose,
+  onSave,
+  position
+}) => {
   const [task, setTask] = useReducer(setTaskReducer, {
     name: "",
     duration: "",
@@ -130,6 +144,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ isVisible, onClose, onSave }) => {
         isOpen={isVisible}
         onClose={onClose}
         onSave={() => onSave(task)}
+        position={position}
       >
         <Form task={task} onInputChange={handleInputChange} />
       </TaskModal>

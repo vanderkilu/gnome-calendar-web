@@ -12,14 +12,17 @@ interface IPosition {
   right: number;
   left: number;
   width: number;
+  bottom: number;
 }
 
 const HomePage: React.FC<{}> = () => {
   const [events, setEvents] = useState<IEvent[]>([]);
   const [selectedDate, setSelectedDate] = useState("");
   const [isFormVisible, toggleFormVisible] = useState(false);
+  const [pos, setPos] = useState<IPosition>();
   const toggleFormShow = () => toggleFormVisible(visible => !visible);
   const handleOnClick = (date: string, position?: IPosition) => {
+    setPos(position);
     toggleFormShow();
     setSelectedDate(date);
   };
@@ -40,6 +43,7 @@ const HomePage: React.FC<{}> = () => {
         isVisible={isFormVisible}
         onClose={toggleFormShow}
         onSave={handleOnSave}
+        position={pos}
       />
     </>
   );
