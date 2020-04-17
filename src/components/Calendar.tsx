@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef } from "react";
 import styled from "styled-components";
 import moment from "moment";
 
@@ -17,7 +17,7 @@ const CellContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(7, 1fr);
 `;
-const Cell = styled.div<{ isToday: boolean }>`
+const StyledCell = styled.div<{ isToday: boolean }>`
   height: 10rem;
   position: relative;
   background-color: ${props => (props.isToday ? "#e8f5e9" : "transparent")};
@@ -65,7 +65,7 @@ interface ICell {
 interface CalendarCellProps {
   days: Array<ICell>;
   today: number;
-  onClick: (dayStr: string) => void;
+  onClick: (dayStr: string, position?: IPosition) => void;
 }
 
 const ID = () => {
@@ -77,29 +77,69 @@ const ID = () => {
   );
 };
 
+interface IPosition {
+  top: number;
+  right: number;
+  left: number;
+  width: number;
+}
+
+interface CellProps {
+  eventItem: ICell;
+  onClick: (passed: boolean, dateStr: string, position?: IPosition) => void;
+  today: number;
+}
+
+const Cell: React.FC<CellProps> = ({ eventItem, today, onClick }) => {
+  const { day, passed, dateStr, event } = eventItem;
+  const cellRef = useRef<HTMLDivElement>(null);
+
+  const handleClick = (passed: boolean, dateStr: string) => {
+    const position = cellRef.current && cellRef.current.getBoundingClientRect();
+    if (position) {
+      onClick(passed, dateStr, position);
+    } else {
+      onClick(passed, dateStr);
+    }
+  };
+
+  return (
+    <StyledCell
+      ref={cellRef}
+      key={ID()}
+      isToday={day === today}
+      onClick={() => handleClick(passed, dateStr)}
+    >
+      {!passed && <CellText>{day}</CellText>}
+      {!passed && <CellText>{event && event.task && event.task.name}</CellText>}
+    </StyledCell>
+  );
+};
+
 const CalendarCell: React.FC<CalendarCellProps> = ({
   days,
   today,
   onClick
 }) => {
-  const handleClick = (passed: boolean, dateStr: string) => {
+  const handleClick = (
+    passed: boolean,
+    dateStr: string,
+    position?: IPosition
+  ) => {
     if (passed) return null;
-    onClick(dateStr);
+    onClick(dateStr, position);
   };
+
   return (
     <>
       <CellContainer>
-        {days.map(({ day, passed, dateStr, event }) => (
+        {days.map(eventItem => (
           <Cell
+            eventItem={eventItem}
+            today={today}
+            onClick={handleClick}
             key={ID()}
-            isToday={day === today}
-            onClick={() => handleClick(passed, dateStr)}
-          >
-            {!passed && <CellText>{day}</CellText>}
-            {!passed && (
-              <CellText>{event && event.task && event.task.name}</CellText>
-            )}
-          </Cell>
+          />
         ))}
       </CellContainer>
     </>
@@ -107,7 +147,7 @@ const CalendarCell: React.FC<CalendarCellProps> = ({
 };
 
 interface CalendarProps {
-  onClick: (date: string) => void;
+  onClick: (date: string, position?: IPosition) => void;
   date: moment.Moment;
   events: IEvent[];
 }
@@ -141,8 +181,8 @@ const Calendar: React.FC<CalendarProps> = ({ date, onClick, events }) => {
     };
   });
   const todayDate = parseInt(date.format("D"));
-  const handleClick = (dayStr: string) => {
-    onClick(dayStr);
+  const handleClick = (dayStr: string, position?: IPosition) => {
+    onClick(dayStr, position);
   };
 
   return (

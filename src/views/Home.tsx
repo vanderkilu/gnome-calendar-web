@@ -1,11 +1,17 @@
 import React, { useState } from "react";
 import TaskForm, { ITask } from "../components/TaskForm";
 import CalendarContainer from "../components/CalendarContainer";
-import moment from "moment";
 
 interface IEvent {
   task: ITask;
   date: string;
+}
+
+interface IPosition {
+  top: number;
+  right: number;
+  left: number;
+  width: number;
 }
 
 const HomePage: React.FC<{}> = () => {
@@ -13,7 +19,7 @@ const HomePage: React.FC<{}> = () => {
   const [selectedDate, setSelectedDate] = useState("");
   const [isFormVisible, toggleFormVisible] = useState(false);
   const toggleFormShow = () => toggleFormVisible(visible => !visible);
-  const handleOnClick = (date: string) => {
+  const handleOnClick = (date: string, position?: IPosition) => {
     toggleFormShow();
     setSelectedDate(date);
   };
