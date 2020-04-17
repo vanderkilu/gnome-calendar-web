@@ -17,7 +17,7 @@ const StyledModal = styled.div<{
   x: number | undefined;
   y: number | undefined;
 }>`
-  position: relative;
+  position: absolute;
   width: 40rem;
   top: ${props => (props.y ? props.y + "px" : "50%")};
   left: ${props => (props.x ? props.x + "px" : "50%")};
