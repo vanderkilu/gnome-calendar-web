@@ -1,17 +1,23 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 const StyledButton = styled.button<{
   color: string | undefined;
   size: number | undefined;
+  btnType?: string;
 }>`
-  padding: 1.2rem 1.5rem;
-  width: ${props => props.size || "10rem"};
+  padding: 0.8rem 1.5rem;
+  width: ${props => props.size || "6rem"};
   background: linear-gradient(to right, #fd9da1, #fcd0dd);
   color: ${props => props.color || "#ffffffff"};
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   border: none;
   border-radius: 6px;
+  ${props =>
+    props.btnType === "normal" &&
+    css`
+      background: linear-gradient(to right, #bdbdbd, #e0e0e0);
+    `}
 `;
 
 interface ButtonProps {
@@ -19,12 +25,24 @@ interface ButtonProps {
   color?: string | undefined;
   size?: number;
   onClick: () => void;
+  btnType?: string;
 }
 
-const Button: React.FC<ButtonProps> = ({ text, color, size, onClick }) => {
+const Button: React.FC<ButtonProps> = ({
+  text,
+  color,
+  size,
+  onClick,
+  btnType
+}) => {
   return (
     <>
-      <StyledButton color={color} size={size} onClick={onClick}>
+      <StyledButton
+        color={color}
+        size={size}
+        onClick={onClick}
+        btnType={btnType}
+      >
         {text}
       </StyledButton>
     </>

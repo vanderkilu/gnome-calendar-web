@@ -18,7 +18,6 @@ const StyledModal = styled.div<{
   y: number | undefined;
 }>`
   position: absolute;
-  width: 40rem;
   top: ${props => (props.y ? props.y + "px" : "50%")};
   left: ${props => (props.x ? props.x + "px" : "50%")};
   transform: translate(-50%, -50%);
@@ -58,13 +57,13 @@ const StyledIcon = styled.img`
 `;
 
 const StyledContent = styled.div`
-  padding: 0 2rem;
+  padding: 0 1rem;
   margin: 1rem 0;
 `;
 
 const StyledFooter = styled.div`
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
 `;
 
 interface TaskModalProps {
@@ -119,6 +118,10 @@ const TaskModal: React.FC<TaskModalProps> = ({
         y = position.bottom - modalHeight / 2 - bottomOfset;
         setToolPos({ x: originalX, y: position.bottom - toolBottomOffset });
       }
+      if (y + modalHeight / 2 < 0) {
+        y = position.bottom + modalHeight / 2;
+        setToolPos({ x, y: position.bottom - toolBottomOffset });
+      }
       setPos({ x, y });
     }
   }, [position]);
@@ -133,7 +136,8 @@ const TaskModal: React.FC<TaskModalProps> = ({
             </StyledHeader>
             <StyledContent>{children}</StyledContent>
             <StyledFooter>
-              <Button text="save" onClick={onSave} />
+              <Button text="Detail" onClick={onSave} btnType="normal" />
+              <Button text="Save" onClick={onSave} />
             </StyledFooter>
           </StyledModal>
         </StyledContainer>

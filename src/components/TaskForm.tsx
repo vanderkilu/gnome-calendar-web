@@ -6,26 +6,26 @@ const StyledForm = styled.form`
   width: 100%;
 `;
 const StyledLabel = styled.label`
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   margin-bottom: 0.5rem;
   color: #616161;
   font-weight: 600;
 `;
 const StyledInputGroup = styled.div`
-  margin: 1rem 0;
+  margin: 2rem 0;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: flex-start;
 `;
 const StyledInput = styled.input`
-  padding: 1.2rem 1rem;
+  padding: 0.8rem 1rem;
   font: inherit;
   border: none;
   border-radius: 3px;
   border: 1px solid #e0e0e0;
   color: #616161;
   font-size: 1.4rem;
-  width: 100%;
   &::placeholder {
     font-size: 1.4rem;
     color: #bdbdbd;
@@ -64,15 +64,6 @@ const Form: React.FC<FormProps> = ({ task, onInputChange }) => {
             placeholder="enter duration"
             name="duration"
             value={task.duration}
-            onChange={(e: ChangeEventType) => onInputChange(e)}
-          />
-        </StyledInputGroup>
-        <StyledInputGroup>
-          <StyledLabel>Start Time </StyledLabel>
-          <StyledInput
-            placeholder="enter start time"
-            name="startTime"
-            value={task.startTime}
             onChange={(e: ChangeEventType) => onInputChange(e)}
           />
         </StyledInputGroup>
