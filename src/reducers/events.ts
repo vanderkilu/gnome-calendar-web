@@ -1,12 +1,18 @@
 import { IEvent } from "../types";
 
-interface EventState {
+export interface EventState {
   events: IEvent[];
-  isFetchLoading: boolean;
+  isLoading: boolean;
   error: string | null;
 }
 
-type EventAction =
+export const EventInitialState = {
+  events: [],
+  isLoading: false,
+  error: null
+};
+
+export type EventAction =
   | { type: "FETCH_EVENTS_BEGIN" }
   | { type: "FETCH_EVENTS_SUCCESS"; payload: { events: IEvent[] } }
   | { type: "FETCH_EVENTS_ERROR"; error: string }
@@ -15,7 +21,10 @@ type EventAction =
   | { type: "UPDATE_EVENT"; payload: { event: IEvent } }
   | { type: "DELETE_EVENT"; payload: { id: string } };
 
-export default function eventReducer(state: EventState, action: EventAction) {
+export function EventReducer(
+  state: EventState = EventInitialState,
+  action: EventAction
+): EventState {
   switch (action.type) {
     case "FETCH_EVENTS_BEGIN":
       return {
