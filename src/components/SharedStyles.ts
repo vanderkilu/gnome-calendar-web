@@ -29,3 +29,22 @@ export const StyledInput = styled.input`
     color: #bdbdbd;
   }
 `;
+export const StyledSelect = styled.select`
+  padding: 0.8rem 1rem;
+  font: inherit;
+  border: none;
+  border-radius: 3px;
+  border: 1px solid #e0e0e0;
+`;
+export const StyledOption = styled.option`
+  color: #616161;
+  font-size: 1.4rem;
+`;
+
+export const StyledTextArea = styled.textarea`
+  padding: 0.8rem 1rem;
+  font: inherit;
+  border: none;
+  border-radius: 3px;
+  border: 1px solid #e0e0e0;
+`;

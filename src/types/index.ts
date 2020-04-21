@@ -2,6 +2,11 @@ export interface ITask {
   name: string;
   duration?: string;
   startTime?: string;
+  date?: string;
+  time?: string;
+  repeat?: string;
+  reminders?: string;
+  notes?: string;
 }
 
 export interface IEvent {

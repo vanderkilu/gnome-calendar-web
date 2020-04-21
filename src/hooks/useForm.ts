@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 
-type ChangeEventType = React.ChangeEvent<HTMLInputElement>;
+type ChangeEventType =
+  | React.ChangeEvent<HTMLInputElement>
+  | React.ChangeEvent<HTMLSelectElement>
+  | React.ChangeEvent<HTMLTextAreaElement>;
 
 const useForm = <T extends {}>(initialState: T) => {
   const [values, setValues] = useState(initialState);
