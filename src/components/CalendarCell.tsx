@@ -32,10 +32,13 @@ const CellEvent = styled.div`
   font-size: 1rem;
   color: #81c784;
   margin-bottom: 0.5rem;
+  cursor: pointer;
 `;
-const CellManyEvent = styled.span`
+const CellManyEvent = styled.div`
   color: "#b8bac3";
   font-size: 1.1rem;
+  width: 100%;
+  cursor: pointer;
 `;
 interface ICell {
   day: number;
