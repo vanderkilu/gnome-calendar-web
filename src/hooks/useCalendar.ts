@@ -1,14 +1,5 @@
 import moment from "moment";
-export interface ITask {
-  name?: string;
-  duration?: string;
-  startTime?: string;
-}
-
-interface IEvent {
-  task: ITask;
-  date: string;
-}
+import { IEvent } from "../types";
 
 export default function(date: moment.Moment, events: IEvent[]) {
   const firstDayOfMonth = (): number => {
@@ -30,11 +21,11 @@ export default function(date: moment.Moment, events: IEvent[]) {
   };
   const formattedDays = days.map(day => {
     const dateStr = dayDate(day);
-    const event = events.find(event => event.date === dateStr);
+    const cellEvents = events.filter(event => event.date === dateStr);
     return {
       day: day,
       passed: day === 0,
-      event,
+      events: cellEvents,
       dateStr
     };
   });
