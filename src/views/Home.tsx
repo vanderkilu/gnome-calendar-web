@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import TaskModalForm, { ITask } from "../components/TaskModalForm";
+import TaskModalForm from "../components/TaskModalForm";
 import Picker, {
   StyledPickerWrapper,
   StyledPickerGroup
@@ -7,18 +7,12 @@ import Picker, {
 import CalendarCell from "../components/CalendarCell";
 import CalendarHeader from "../components/CalendarHeader";
 import useCalendar from "../hooks/useCalendar";
+import { useEvents } from "../contexts/event";
+import { ID } from "../utils";
+import { IPosition, IEvent, ITask } from "../types";
 
 import styled from "styled-components";
 import moment from "moment";
-
-const ID = () => {
-  return (
-    "_" +
-    Math.random()
-      .toString(36)
-      .substr(2, 9)
-  );
-};
 
 const StyledCalendarContainer = styled.div`
   padding: 5rem;
@@ -30,22 +24,12 @@ const H3 = styled.h3`
   color: #212121;
 `;
 
-interface IEvent {
-  task: ITask;
-  date: string;
-}
-
-interface IPosition {
-  top: number;
-  right: number;
-  left: number;
-  width: number;
-  bottom: number;
-}
-
 const HomePage: React.FC<{}> = () => {
   const [date, setDate] = useState(moment());
-  const [events, setEvents] = useState<IEvent[]>([]);
+  const {
+    state: { events },
+    dispatch
+  } = useEvents();
   const { formattedDays, todayDate } = useCalendar(date, events);
   const [selectedDate, setSelectedDate] = useState("");
   const [isFormVisible, toggleFormVisible] = useState(false);
@@ -63,10 +47,10 @@ const HomePage: React.FC<{}> = () => {
   const handleOnSave = (task: ITask) => {
     const event: IEvent = {
       task: task,
-      date: selectedDate
+      date: selectedDate,
+      id: ID()
     };
-    console.log(event);
-    setEvents([...events, event]);
+    dispatch({ type: "ADD_EVENT", payload: { event } });
     toggleFormShow();
   };
 

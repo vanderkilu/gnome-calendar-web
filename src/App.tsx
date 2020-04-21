@@ -1,12 +1,14 @@
 import React from "react";
-// import Calendar from "./components/calendar";
 import Home from "./views/Home";
 import "./index.css";
+import { EventProvider } from "./contexts/event";
 
 function App() {
   return (
     <>
-      <Home />
+      <EventProvider>
+        <Home />
+      </EventProvider>
     </>
   );
 }

@@ -1,6 +1,7 @@
-import React, { useState, useReducer } from "react";
+import React, { useReducer } from "react";
 import styled from "styled-components";
 import TaskModal from "./TaskModal";
+import { IPosition, ITask } from "../types";
 
 const StyledForm = styled.form`
   width: 100%;
@@ -31,12 +32,6 @@ const StyledInput = styled.input`
     color: #bdbdbd;
   }
 `;
-
-export interface ITask {
-  name?: string;
-  duration?: string;
-  startTime?: string;
-}
 
 type ChangeEventType = React.ChangeEvent<HTMLInputElement>;
 
@@ -96,14 +91,6 @@ const setTaskReducer = (state: ITask, action: Action) => {
       };
   }
 };
-
-interface IPosition {
-  top: number;
-  right: number;
-  left: number;
-  width: number;
-  bottom: number;
-}
 
 interface TaskFormProps {
   isVisible: boolean;
