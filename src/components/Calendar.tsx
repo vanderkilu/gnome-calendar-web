@@ -1,6 +1,8 @@
 import React, { useRef } from "react";
 import styled from "styled-components";
 import moment from "moment";
+import { IPosition, IEvent } from "../types";
+import { ID } from "../utils";
 
 const Header = styled.div`
   display: grid;
@@ -44,17 +46,6 @@ const CalendarHeader: React.FC<{}> = () => {
   );
 };
 
-export interface ITask {
-  name?: string;
-  duration?: string;
-  startTime?: string;
-}
-
-interface IEvent {
-  task: ITask;
-  date: string;
-}
-
 interface ICell {
   day: number;
   passed: boolean;
@@ -66,23 +57,6 @@ interface CalendarCellProps {
   days: Array<ICell>;
   today: number;
   onClick: (dayStr: string, position?: IPosition) => void;
-}
-
-const ID = () => {
-  return (
-    "_" +
-    Math.random()
-      .toString(36)
-      .substr(2, 9)
-  );
-};
-
-interface IPosition {
-  top: number;
-  right: number;
-  left: number;
-  width: number;
-  bottom: number;
 }
 
 interface CellProps {

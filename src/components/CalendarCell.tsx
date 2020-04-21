@@ -1,5 +1,7 @@
 import React, { useRef } from "react";
 import styled from "styled-components";
+import { IPosition, IEvent } from "../types";
+import { ID } from "../utils";
 
 const CellContainer = styled.div`
   display: grid;
@@ -19,17 +21,6 @@ const CellText = styled.p`
   color: "#b8bac3";
 `;
 
-export interface ITask {
-  name?: string;
-  duration?: string;
-  startTime?: string;
-}
-
-interface IEvent {
-  task: ITask;
-  date: string;
-}
-
 interface ICell {
   day: number;
   passed: boolean;
@@ -41,23 +32,6 @@ interface CalendarCellProps {
   days: Array<ICell>;
   today: number;
   onClick: (dayStr: string, position?: IPosition) => void;
-}
-
-const ID = () => {
-  return (
-    "_" +
-    Math.random()
-      .toString(36)
-      .substr(2, 9)
-  );
-};
-
-interface IPosition {
-  top: number;
-  right: number;
-  left: number;
-  width: number;
-  bottom: number;
 }
 
 interface CellProps {
