@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import TaskModal from "./TaskModal";
+import React from "react";
 import { IPosition, ITask } from "../types";
 import {
   StyledForm,
@@ -7,7 +6,6 @@ import {
   StyledLabel,
   StyledInput
 } from "./SharedStyles";
-import useForm from "../hooks/useForm";
 
 type ChangeEventType = React.ChangeEvent<HTMLInputElement>;
 
@@ -16,7 +14,7 @@ interface FormProps {
   onInputChange: (event: ChangeEventType) => void;
 }
 
-const Form: React.FC<FormProps> = ({ task, onInputChange }) => {
+export const Form: React.FC<FormProps> = ({ task, onInputChange }) => {
   return (
     <>
       <StyledForm>
@@ -42,39 +40,3 @@ const Form: React.FC<FormProps> = ({ task, onInputChange }) => {
     </>
   );
 };
-
-interface TaskFormProps {
-  isVisible: boolean;
-  onClose: () => void;
-  onSave: (task: ITask) => void;
-  position?: IPosition;
-}
-
-const TaskForm: React.FC<TaskFormProps> = ({
-  isVisible,
-  onClose,
-  onSave,
-  position
-}) => {
-  const initialTask: ITask = {
-    name: "",
-    duration: ""
-  };
-
-  const { values, handleInputChange } = useForm(initialTask);
-
-  return (
-    <>
-      <TaskModal
-        isOpen={isVisible}
-        onClose={onClose}
-        onSave={() => onSave(values)}
-        position={position}
-      >
-        <Form task={values} onInputChange={handleInputChange} />
-      </TaskModal>
-    </>
-  );
-};
-
-export default TaskForm;

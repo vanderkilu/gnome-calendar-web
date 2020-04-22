@@ -8,9 +8,7 @@ import {
   StyledOption,
   StyledTextArea
 } from "./SharedStyles";
-import TaskModal from "./TaskModal";
 import { ITask } from "../types";
-import useForm from "../hooks/useForm";
 
 type ChangeEventType =
   | React.ChangeEvent<HTMLInputElement>
@@ -82,31 +80,4 @@ const FormDetail: React.FC<FormProps> = ({ task, onInputChange }) => {
   );
 };
 
-interface TaskFormProps {
-  isVisible: boolean;
-  onClose: () => void;
-  onSave: (task: ITask) => void;
-}
-
-const TaskForm: React.FC<TaskFormProps> = ({ isVisible, onClose, onSave }) => {
-  const initialTask: ITask = {
-    name: "",
-    duration: ""
-  };
-
-  const { values, handleInputChange } = useForm(initialTask);
-
-  return (
-    <>
-      <TaskModal
-        isOpen={isVisible}
-        onClose={onClose}
-        onSave={() => onSave(values)}
-      >
-        <FormDetail task={values} onInputChange={handleInputChange} />
-      </TaskModal>
-    </>
-  );
-};
-
-export default TaskForm;
+export default FormDetail;

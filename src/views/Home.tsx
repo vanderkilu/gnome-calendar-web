@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import TaskModalForm from "../components/TaskModalForm";
 import Picker, {
   StyledPickerWrapper,
   StyledPickerGroup
@@ -10,6 +9,10 @@ import useCalendar from "../hooks/useCalendar";
 import { useEvents } from "../contexts/event";
 import { ID } from "../utils";
 import { IPosition, IEvent, ITask } from "../types";
+import FormDetail from "../components/TaskModalFormDetail";
+import { Form } from "../components/TaskModalForm";
+import TaskModal from "../components/TaskModal";
+import useForm from "../hooks/useForm";
 
 import styled from "styled-components";
 import moment from "moment";
@@ -33,6 +36,7 @@ const HomePage: React.FC<{}> = () => {
   const { formattedDays, todayDate } = useCalendar(date, events);
   const [selectedDate, setSelectedDate] = useState("");
   const [isFormVisible, toggleFormVisible] = useState(false);
+  const [isFormDetailVisible, toggleFormDetailVisible] = useState(false);
   const [pos, setPos] = useState<IPosition>();
 
   const updateDate = (type: moment.unitOfTime.All, index: number) => {
@@ -53,6 +57,14 @@ const HomePage: React.FC<{}> = () => {
     dispatch({ type: "ADD_EVENT", payload: { event } });
     toggleFormShow();
   };
+  const handleOnEdit = () => {};
+
+  const initialTask: ITask = {
+    name: "",
+    duration: ""
+  };
+
+  const { values, handleInputChange } = useForm(initialTask);
 
   return (
     <>
@@ -71,12 +83,21 @@ const HomePage: React.FC<{}> = () => {
           onClick={handleOnClick}
         />
       </StyledCalendarContainer>
-      <TaskModalForm
-        isVisible={isFormVisible}
+      <TaskModal
+        isOpen={isFormVisible}
         onClose={toggleFormShow}
-        onSave={handleOnSave}
+        onSave={() => handleOnSave(values)}
         position={pos}
-      />
+      >
+        <Form task={values} onInputChange={handleInputChange} />
+      </TaskModal>
+      <TaskModal
+        isOpen={isFormDetailVisible}
+        onClose={() => null}
+        onSave={handleOnEdit}
+      >
+        <FormDetail task={values} onInputChange={handleInputChange} />
+      </TaskModal>
     </>
   );
 };
