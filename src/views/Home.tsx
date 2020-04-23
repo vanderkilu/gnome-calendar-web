@@ -96,8 +96,6 @@ const HomePage: React.FC<{}> = () => {
     FormEventInitialState
   );
   const [pos, setPos] = useState<IPosition>();
-
-  const { values, handleInputChange } = useForm(formEvent.event.task);
   const { formattedDays, todayDate } = useCalendar(date, state.events);
 
   const updateDate = (type: moment.unitOfTime.All, index: number) => {
@@ -136,16 +134,17 @@ const HomePage: React.FC<{}> = () => {
       date: formEvent.selectedDate,
       id: ID()
     };
+    console.log("form", event);
     setFormEvent({ type: "FORM_UPDATE", payload: { event } });
   };
+
+  const hasTask = formEvent.event.task.name !== "";
 
   return (
     <>
       <StyledCalendarContainer>
         <StyledPickerWrapper>
           <H3>task calendar</H3>
-          <H3>{formEvent.event.task.name}</H3>
-          <H3>{values.name}</H3>
           <StyledPickerGroup>
             <Picker date={date} type="month" setDate={updateDate} key={ID()} />
             <Picker date={date} type="year" setDate={updateDate} key={ID()} />
@@ -168,7 +167,7 @@ const HomePage: React.FC<{}> = () => {
         footer={
           <StyledFooter>
             <Button text="Detail" onClick={handleOnDetail} btnType="normal" />
-            <Button text="Save" onClick={handleOnSave} />
+            <Button text="Save" onClick={handleOnSave} isDisabled={!hasTask} />
           </StyledFooter>
         }
       >

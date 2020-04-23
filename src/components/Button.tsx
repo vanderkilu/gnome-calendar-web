@@ -18,6 +18,13 @@ const StyledButton = styled.button<{
     css`
       background: linear-gradient(to right, #bdbdbd, #e0e0e0);
     `}
+  ${props =>
+    props.disabled &&
+    css`
+      opacity: 0.5;
+      cursor: not-allowed;
+      pointer-events: all;
+    `}
 `;
 
 interface ButtonProps {
