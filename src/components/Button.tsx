@@ -34,6 +34,7 @@ interface ButtonProps {
   onClick: () => void;
   btnType?: string;
   isDisabled?: boolean;
+  type?: "button" | "submit" | "reset" | undefined;
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -42,6 +43,7 @@ const Button: React.FC<ButtonProps> = ({
   size,
   onClick,
   btnType,
+  type,
   isDisabled = false
 }) => {
   return (
@@ -52,6 +54,7 @@ const Button: React.FC<ButtonProps> = ({
         onClick={onClick}
         btnType={btnType}
         disabled={isDisabled}
+        type={type}
       >
         {text}
       </StyledButton>

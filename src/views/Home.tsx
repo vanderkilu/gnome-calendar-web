@@ -46,7 +46,8 @@ type FormEventAction =
   | { type: "SELECTED_DATE"; payload: string }
   | { type: "IS_BRIEF_VISIBLE"; payload: boolean }
   | { type: "IS_DETAIL_VISIBLE"; payload: boolean }
-  | { type: "FORM_UPDATE"; payload: { event: IEvent } };
+  | { type: "FORM_UPDATE"; payload: { event: IEvent } }
+  | { type: "RESET_NAME" };
 
 const FormEventInitialState = {
   event: { task: { name: "" }, date: "", id: "" },
@@ -82,6 +83,11 @@ const FormEventReducer = (state: FormEvent, action: FormEventAction) => {
         ...state,
         event: action.payload.event
       };
+    case "RESET_NAME":
+      return {
+        ...state,
+        event: { ...state.event, ...{ task: { name: "" } } }
+      };
     default:
       return state;
   }
@@ -111,6 +117,7 @@ const HomePage: React.FC<{}> = () => {
     dispatch({ type: "ADD_EVENT", payload: { event } }); // add event to globale events
     setFormEvent({ type: "EVENT", payload: { event } }); //set the current event
     setFormEvent({ type: "IS_BRIEF_VISIBLE", payload: false });
+    setFormEvent({ type: "RESET_NAME" });
   };
   const handleOnDetail = () => {
     setFormEvent({ type: "IS_BRIEF_VISIBLE", payload: false });
@@ -167,7 +174,12 @@ const HomePage: React.FC<{}> = () => {
         footer={
           <StyledFooter>
             <Button text="Detail" onClick={handleOnDetail} btnType="normal" />
-            <Button text="Save" onClick={handleOnSave} isDisabled={!hasTask} />
+            <Button
+              text="Save"
+              onClick={handleOnSave}
+              isDisabled={!hasTask}
+              type="submit"
+            />
           </StyledFooter>
         }
       >
@@ -176,6 +188,7 @@ const HomePage: React.FC<{}> = () => {
           onInputChange={(e: ChangeEventType) => {
             updateForm(e);
           }}
+          onEnter={handleOnSave}
         />
       </TaskModal>
       <TaskModal
