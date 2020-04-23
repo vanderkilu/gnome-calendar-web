@@ -51,15 +51,23 @@ interface CalendarCellProps {
   days: Array<ICell>;
   today: number;
   onClick: (dayStr: string, position?: IPosition) => void;
+  onCellEventClick: (id: string) => void;
 }
 
 interface CellProps {
   eventItem: ICell;
   onClick: (passed: boolean, dateStr: string, position?: IPosition) => void;
   today: number;
+  onCellEventClick: (id: string) => void;
 }
+type ChangeEventType = React.MouseEvent<HTMLDivElement, MouseEvent>;
 
-const Cell: React.FC<CellProps> = ({ eventItem, today, onClick }) => {
+const Cell: React.FC<CellProps> = ({
+  eventItem,
+  today,
+  onClick,
+  onCellEventClick
+}) => {
   const { day, passed, dateStr, events } = eventItem;
   const cellRef = useRef<HTMLDivElement>(null);
 
@@ -76,6 +84,11 @@ const Cell: React.FC<CellProps> = ({ eventItem, today, onClick }) => {
   const newEvents = isManyEvents ? events.slice(0, 3) : events;
   const overDue = events.length - 3;
 
+  const handleOnEventCellClick = (e: ChangeEventType, id: string) => {
+    e.stopPropagation();
+    onCellEventClick(id);
+  };
+
   return (
     <StyledCell
       ref={cellRef}
@@ -86,7 +99,13 @@ const Cell: React.FC<CellProps> = ({ eventItem, today, onClick }) => {
       {!passed && <CellText>{day}</CellText>}
       {hasEvent &&
         newEvents.map(event => (
-          <CellEvent>{event && event.task && event.task.name}</CellEvent>
+          <CellEvent
+            onClick={(e: ChangeEventType) =>
+              handleOnEventCellClick(e, event.id)
+            }
+          >
+            {event && event.task && event.task.name}
+          </CellEvent>
         ))}
       {isManyEvents && <CellManyEvent>+{overDue}</CellManyEvent>}
     </StyledCell>
@@ -96,7 +115,8 @@ const Cell: React.FC<CellProps> = ({ eventItem, today, onClick }) => {
 const CalendarCell: React.FC<CalendarCellProps> = ({
   days,
   today,
-  onClick
+  onClick,
+  onCellEventClick
 }) => {
   const handleClick = (
     passed: boolean,
@@ -116,6 +136,7 @@ const CalendarCell: React.FC<CalendarCellProps> = ({
             today={today}
             onClick={handleClick}
             key={ID()}
+            onCellEventClick={onCellEventClick}
           />
         ))}
       </CellContainer>

@@ -119,16 +119,13 @@ const HomePage: React.FC<{}> = () => {
     setFormEvent({ type: "IS_DETAIL_VISIBLE", payload: false });
   };
   const handleOnDelete = () => {};
-
-  useEffect(() => {
-    //always checks if a particular event has changed and set it as the current event
-    const currentEvent = state.events.find(
-      event => event.id === state.selectedId
-    );
+  const handleCellEventClick = (id: string) => {
+    const currentEvent = state.events.find(event => event.id === id);
     if (currentEvent) {
       setFormEvent({ type: "EVENT", payload: { event: currentEvent } });
     }
-  }, [state]);
+    setFormEvent({ type: "IS_DETAIL_VISIBLE", payload: true });
+  };
 
   return (
     <>
@@ -145,6 +142,7 @@ const HomePage: React.FC<{}> = () => {
           days={formattedDays}
           today={todayDate}
           onClick={handleOnClick}
+          onCellEventClick={handleCellEventClick}
         />
       </StyledCalendarContainer>
       <TaskModal

@@ -4,14 +4,12 @@ export interface EventState {
   events: IEvent[];
   isLoading: boolean;
   error: string | null;
-  selectedId: string;
 }
 
 export const EventInitialState = {
   events: [],
   isLoading: false,
-  error: null,
-  selectedId: ""
+  error: null
 };
 
 export type EventAction =
@@ -21,8 +19,7 @@ export type EventAction =
   | { type: "ADD_EVENT_START"; payload: { event: IEvent } }
   | { type: "ADD_EVENT"; payload: { event: IEvent } }
   | { type: "UPDATE_EVENT"; payload: { event: IEvent } }
-  | { type: "DELETE_EVENT"; payload: { id: string } }
-  | { type: "SELECTED_ID"; payload: { id: string } };
+  | { type: "DELETE_EVENT"; payload: { id: string } };
 
 export function EventReducer(
   state: EventState = EventInitialState,
@@ -64,11 +61,6 @@ export function EventReducer(
         events: state.events.map(event =>
           event.id === action.payload.event.id ? action.payload.event : event
         )
-      };
-    case "SELECTED_ID":
-      return {
-        ...state,
-        selectedId: action.payload.id
       };
     default:
       return state;
