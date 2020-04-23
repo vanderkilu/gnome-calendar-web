@@ -26,6 +26,7 @@ const StyledModal = styled.div<{
   box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.05);
   min-height: 20rem;
   padding: 0.5rem 1rem;
+  z-index: 20;
 `;
 
 const StyledToolTip = styled.div<{
@@ -61,7 +62,7 @@ const StyledContent = styled.div`
   margin: 1rem 0;
 `;
 
-const StyledFooter = styled.div`
+export const StyledFooter = styled.div`
   display: flex;
   justify-content: space-between;
 `;
@@ -70,7 +71,9 @@ interface TaskModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSave: () => void;
+  onDetail: () => void;
   position?: IPosition;
+  footer?: React.ReactNode;
 }
 
 interface IPosition {
@@ -86,7 +89,9 @@ const TaskModal: React.FC<TaskModalProps> = ({
   isOpen,
   onClose,
   onSave,
-  position
+  position,
+  footer,
+  onDetail
 }) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -135,10 +140,13 @@ const TaskModal: React.FC<TaskModalProps> = ({
               <StyledIcon alt="close icon" src={closeIcon} onClick={onClose} />
             </StyledHeader>
             <StyledContent>{children}</StyledContent>
-            <StyledFooter>
-              <Button text="Detail" onClick={onSave} btnType="normal" />
-              <Button text="Save" onClick={onSave} />
-            </StyledFooter>
+            {!footer && (
+              <StyledFooter>
+                <Button text="Detail" onClick={onDetail} btnType="normal" />
+                <Button text="Save" onClick={onSave} />
+              </StyledFooter>
+            )}
+            {footer}
           </StyledModal>
         </StyledContainer>
       )}

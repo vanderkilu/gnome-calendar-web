@@ -55,17 +55,18 @@ const FormDetail: React.FC<FormProps> = ({ task, onInputChange }) => {
             name="reminders"
             value={task.reminders}
             onChange={(e: ChangeEventType) => onInputChange(e)}
-          ></StyledSelect>
-          <StyledOption>Add reminders</StyledOption>
-          <StyledOption value="5-min">5 minutes</StyledOption>
-          <StyledOption value="10-min">10 minutes</StyledOption>
-          <StyledOption value="30-min">30 minutes</StyledOption>
-          <StyledOption value="1-hour">1 hour</StyledOption>
-          <StyledOption value="1-hour">1 hour</StyledOption>
-          <StyledOption value="1-day">1 day</StyledOption>
-          <StyledOption value="2-days">2 days</StyledOption>
-          <StyledOption value="3-days">3 days</StyledOption>
-          <StyledOption value="1-week">1 week</StyledOption>
+          >
+            <StyledOption>Add reminders</StyledOption>
+            <StyledOption value="5-min">5 minutes</StyledOption>
+            <StyledOption value="10-min">10 minutes</StyledOption>
+            <StyledOption value="30-min">30 minutes</StyledOption>
+            <StyledOption value="1-hour">1 hour</StyledOption>
+            <StyledOption value="1-hour">1 hour</StyledOption>
+            <StyledOption value="1-day">1 day</StyledOption>
+            <StyledOption value="2-days">2 days</StyledOption>
+            <StyledOption value="3-days">3 days</StyledOption>
+            <StyledOption value="1-week">1 week</StyledOption>
+          </StyledSelect>
         </StyledInputGroup>
         <StyledInputGroup>
           <StyledLabel>Notes</StyledLabel>

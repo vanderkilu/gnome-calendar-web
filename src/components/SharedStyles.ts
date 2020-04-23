@@ -35,9 +35,12 @@ export const StyledSelect = styled.select`
   border: none;
   border-radius: 3px;
   border: 1px solid #e0e0e0;
+  background-color: transparent;
+  width: 90%;
 `;
 export const StyledOption = styled.option`
   color: #616161;
+  font: inherit;
   font-size: 1.4rem;
 `;
 
@@ -47,4 +50,5 @@ export const StyledTextArea = styled.textarea`
   border: none;
   border-radius: 3px;
   border: 1px solid #e0e0e0;
+  width: 90%;
 `;
