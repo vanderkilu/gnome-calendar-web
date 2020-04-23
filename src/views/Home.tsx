@@ -108,6 +108,7 @@ const HomePage: React.FC<{}> = () => {
     setDate(moment(date).set(type, index));
   };
   const handleOnClick = (date: string, position?: IPosition) => {
+    setFormEvent({ type: "RESET_NAME" });
     setPos(position);
     setFormEvent({ type: "IS_BRIEF_VISIBLE", payload: true });
     setFormEvent({ type: "SELECTED_DATE", payload: date });
