@@ -1,5 +1,5 @@
 export interface ITask {
-  name: string;
+  name?: string;
   duration?: string;
   startTime?: string;
   date?: string;

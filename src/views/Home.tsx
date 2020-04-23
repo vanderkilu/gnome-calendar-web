@@ -1,4 +1,4 @@
-import React, { useState, useReducer, useEffect } from "react";
+import React, { useState, useReducer } from "react";
 import Picker, {
   StyledPickerWrapper,
   StyledPickerGroup
@@ -18,6 +18,11 @@ import useForm from "../hooks/useForm";
 
 import styled from "styled-components";
 import moment from "moment";
+
+type ChangeEventType =
+  | React.ChangeEvent<HTMLInputElement>
+  | React.ChangeEvent<HTMLSelectElement>
+  | React.ChangeEvent<HTMLTextAreaElement>;
 
 const StyledCalendarContainer = styled.div`
   padding: 5rem;
@@ -40,7 +45,8 @@ type FormEventAction =
   | { type: "EVENT"; payload: { event: IEvent } }
   | { type: "SELECTED_DATE"; payload: string }
   | { type: "IS_BRIEF_VISIBLE"; payload: boolean }
-  | { type: "IS_DETAIL_VISIBLE"; payload: boolean };
+  | { type: "IS_DETAIL_VISIBLE"; payload: boolean }
+  | { type: "FORM_UPDATE"; payload: { event: IEvent } };
 
 const FormEventInitialState = {
   event: { task: { name: "" }, date: "", id: "" },
@@ -71,6 +77,11 @@ const FormEventReducer = (state: FormEvent, action: FormEventAction) => {
         ...state,
         isDetailVisible: action.payload
       };
+    case "FORM_UPDATE":
+      return {
+        ...state,
+        event: action.payload.event
+      };
     default:
       return state;
   }
@@ -86,11 +97,7 @@ const HomePage: React.FC<{}> = () => {
   );
   const [pos, setPos] = useState<IPosition>();
 
-  const initialTask: ITask = {
-    name: "",
-    duration: ""
-  };
-  const { values, handleInputChange } = useForm(initialTask);
+  const { values, handleInputChange } = useForm(formEvent.event.task);
   const { formattedDays, todayDate } = useCalendar(date, state.events);
 
   const updateDate = (type: moment.unitOfTime.All, index: number) => {
@@ -101,12 +108,8 @@ const HomePage: React.FC<{}> = () => {
     setFormEvent({ type: "IS_BRIEF_VISIBLE", payload: true });
     setFormEvent({ type: "SELECTED_DATE", payload: date });
   };
-  const handleOnSave = (task: ITask) => {
-    const event: IEvent = {
-      task: task,
-      date: formEvent.selectedDate,
-      id: ID()
-    };
+  const handleOnSave = () => {
+    const event = formEvent.event;
     dispatch({ type: "ADD_EVENT", payload: { event } }); // add event to globale events
     setFormEvent({ type: "EVENT", payload: { event } }); //set the current event
     setFormEvent({ type: "IS_BRIEF_VISIBLE", payload: false });
@@ -127,11 +130,22 @@ const HomePage: React.FC<{}> = () => {
     setFormEvent({ type: "IS_DETAIL_VISIBLE", payload: true });
   };
 
+  const updateForm = (e: ChangeEventType) => {
+    const event: IEvent = {
+      task: { [e.target.name]: e.target.value },
+      date: formEvent.selectedDate,
+      id: ID()
+    };
+    setFormEvent({ type: "FORM_UPDATE", payload: { event } });
+  };
+
   return (
     <>
       <StyledCalendarContainer>
         <StyledPickerWrapper>
           <H3>task calendar</H3>
+          <H3>{formEvent.event.task.name}</H3>
+          <H3>{values.name}</H3>
           <StyledPickerGroup>
             <Picker date={date} type="month" setDate={updateDate} key={ID()} />
             <Picker date={date} type="year" setDate={updateDate} key={ID()} />
@@ -150,11 +164,20 @@ const HomePage: React.FC<{}> = () => {
         onClose={() =>
           setFormEvent({ type: "IS_BRIEF_VISIBLE", payload: false })
         }
-        onSave={() => handleOnSave(values)}
-        onDetail={handleOnDetail}
         position={pos}
+        footer={
+          <StyledFooter>
+            <Button text="Detail" onClick={handleOnDetail} btnType="normal" />
+            <Button text="Save" onClick={handleOnSave} />
+          </StyledFooter>
+        }
       >
-        <Form task={values} onInputChange={handleInputChange} />
+        <Form
+          task={formEvent.event.task}
+          onInputChange={(e: ChangeEventType) => {
+            updateForm(e);
+          }}
+        />
       </TaskModal>
       <TaskModal
         footer={
@@ -167,10 +190,11 @@ const HomePage: React.FC<{}> = () => {
         onClose={() =>
           setFormEvent({ type: "IS_DETAIL_VISIBLE", payload: false })
         }
-        onSave={() => null}
-        onDetail={() => null}
       >
-        <FormDetail task={values} onInputChange={handleInputChange} />
+        <FormDetail
+          task={formEvent.event.task}
+          onInputChange={(e: ChangeEventType) => updateForm(e)}
+        />
       </TaskModal>
     </>
   );

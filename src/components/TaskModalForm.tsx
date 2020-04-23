@@ -1,5 +1,5 @@
 import React from "react";
-import { IPosition, ITask } from "../types";
+import { ITask } from "../types";
 import {
   StyledForm,
   StyledInputGroup,

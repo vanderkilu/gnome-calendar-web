@@ -1,7 +1,6 @@
 import React, { useLayoutEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import closeIcon from "../assets/close.svg";
-import Button from "./Button";
 
 const StyledContainer = styled.div`
   position: fixed;
@@ -70,8 +69,6 @@ export const StyledFooter = styled.div`
 interface TaskModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: () => void;
-  onDetail: () => void;
   position?: IPosition;
   footer?: React.ReactNode;
 }
@@ -88,10 +85,8 @@ const TaskModal: React.FC<TaskModalProps> = ({
   children,
   isOpen,
   onClose,
-  onSave,
   position,
-  footer,
-  onDetail
+  footer
 }) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -140,12 +135,6 @@ const TaskModal: React.FC<TaskModalProps> = ({
               <StyledIcon alt="close icon" src={closeIcon} onClick={onClose} />
             </StyledHeader>
             <StyledContent>{children}</StyledContent>
-            {!footer && (
-              <StyledFooter>
-                <Button text="Detail" onClick={onDetail} btnType="normal" />
-                <Button text="Save" onClick={onSave} />
-              </StyledFooter>
-            )}
             {footer}
           </StyledModal>
         </StyledContainer>

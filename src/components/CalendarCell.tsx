@@ -85,8 +85,8 @@ const Cell: React.FC<CellProps> = ({
   const overDue = events.length - 3;
 
   const handleOnEventCellClick = (e: ChangeEventType, id: string) => {
-    e.stopPropagation();
     onCellEventClick(id);
+    e.stopPropagation();
   };
 
   return (
@@ -103,6 +103,7 @@ const Cell: React.FC<CellProps> = ({
             onClick={(e: ChangeEventType) =>
               handleOnEventCellClick(e, event.id)
             }
+            key={ID()}
           >
             {event && event.task && event.task.name}
           </CellEvent>
