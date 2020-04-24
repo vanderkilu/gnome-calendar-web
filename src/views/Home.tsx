@@ -8,7 +8,7 @@ import CalendarHeader from "../components/CalendarHeader";
 import useCalendar from "../hooks/useCalendar";
 import { useEvents } from "../contexts/event";
 import { ID } from "../utils";
-import { IPosition, IEvent, ITask } from "../types";
+import { IPosition, IEvent } from "../types";
 import FormDetail from "../components/TaskModalFormDetail";
 import { Form } from "../components/TaskModalForm";
 import TaskModal from "../components/TaskModal";
