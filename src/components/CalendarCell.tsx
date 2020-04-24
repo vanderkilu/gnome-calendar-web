@@ -52,7 +52,7 @@ interface CalendarCellProps {
   today: number;
   onClick: (dayStr: string, position?: IPosition) => void;
   onCellEventClick: (id: string) => void;
-  onOverflowClick: (e: ChangeEventType) => void;
+  onOverflowClick: (e: ChangeEventType, dateStr: string) => void;
 }
 
 interface CellProps {
@@ -60,7 +60,7 @@ interface CellProps {
   onClick: (passed: boolean, dateStr: string, position?: IPosition) => void;
   today: number;
   onCellEventClick: (id: string) => void;
-  onOverflowClick: (e: ChangeEventType) => void;
+  onOverflowClick: (e: ChangeEventType, dateStr: string) => void;
 }
 type ChangeEventType = React.MouseEvent<HTMLDivElement, MouseEvent>;
 
@@ -112,7 +112,9 @@ const Cell: React.FC<CellProps> = ({
           </CellEvent>
         ))}
       {isManyEvents && (
-        <CellManyEvent onClick={(e: ChangeEventType) => onOverflowClick(e)}>
+        <CellManyEvent
+          onClick={(e: ChangeEventType) => onOverflowClick(e, dateStr)}
+        >
           +{overDue}
         </CellManyEvent>
       )}

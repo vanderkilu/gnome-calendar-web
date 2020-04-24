@@ -34,6 +34,13 @@ const H3 = styled.h3`
   font-weight: bold;
   color: #212121;
 `;
+const H2 = styled.h2`
+  font-size: 1.7rem;
+  text-transform: capitalize;
+  font-weight: bold;
+  color: #212121;
+  text-align: center;
+`;
 
 type FormEvent = {
   event: IEvent;
@@ -162,8 +169,9 @@ const HomePage: React.FC<{}> = () => {
     }
     setFormEvent({ type: "IS_DETAIL_VISIBLE", payload: true });
   };
-  const handleOnOverflow = (e: DivEventType) => {
+  const handleOnOverflow = (e: DivEventType, dateStr: string) => {
     e.stopPropagation();
+    setFormEvent({ type: "SELECTED_DATE", payload: dateStr });
     setFormEvent({ type: "IS_OVERFLOW_VISIBLE", payload: true });
   };
   const handleOnOverflowClick = (id: string) => {
@@ -174,6 +182,7 @@ const HomePage: React.FC<{}> = () => {
   const eventsForSelectedDate = state.events.filter(
     event => event.date === formEvent.selectedDate
   );
+  const selectedDay = moment(formEvent.selectedDate).format("D");
 
   const updateForm = (e: ChangeEventType) => {
     const { name, value } = e.target;
@@ -249,8 +258,11 @@ const HomePage: React.FC<{}> = () => {
         onClose={() =>
           setFormEvent({ type: "IS_OVERFLOW_VISIBLE", payload: false })
         }
+        position={pos}
+        width={25}
         footer={<></>}
       >
+        <H2>{selectedDay}</H2>
         {eventsForSelectedDate.map(event => (
           <CellEvent onClick={() => handleOnOverflowClick(event.id)} key={ID()}>
             {event.task.name}

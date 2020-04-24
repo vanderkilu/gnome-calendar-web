@@ -1,5 +1,5 @@
 import React, { useLayoutEffect, useRef, useState } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import closeIcon from "../assets/close.svg";
 
 const StyledContainer = styled.div`
@@ -15,6 +15,7 @@ const StyledContainer = styled.div`
 const StyledModal = styled.div<{
   x: number | undefined;
   y: number | undefined;
+  width: number | undefined;
 }>`
   position: absolute;
   top: ${props => (props.y ? props.y + "px" : "50%")};
@@ -26,6 +27,11 @@ const StyledModal = styled.div<{
   min-height: 20rem;
   padding: 0.5rem 1rem;
   z-index: 20;
+  ${props =>
+    props.width &&
+    css`
+      width: ${props.width}rem;
+    `}
 `;
 
 const StyledToolTip = styled.div<{
@@ -71,6 +77,7 @@ interface TaskModalProps {
   onClose: () => void;
   position?: IPosition;
   footer?: React.ReactNode;
+  width?: number;
 }
 
 interface IPosition {
@@ -86,7 +93,8 @@ const TaskModal: React.FC<TaskModalProps> = ({
   isOpen,
   onClose,
   position,
-  footer
+  footer,
+  width
 }) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -130,7 +138,7 @@ const TaskModal: React.FC<TaskModalProps> = ({
       {isOpen && (
         <StyledContainer ref={containerRef}>
           <StyledToolTip x={toolPos.x} y={toolPos.y} />
-          <StyledModal ref={modalRef} x={pos.x} y={pos.y}>
+          <StyledModal ref={modalRef} x={pos.x} y={pos.y} width={width}>
             <StyledHeader>
               <StyledIcon alt="close icon" src={closeIcon} onClick={onClose} />
             </StyledHeader>
