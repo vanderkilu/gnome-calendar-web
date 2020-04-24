@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React from "react";
 import { ITask } from "../types";
 import {
   StyledForm,
@@ -17,19 +17,13 @@ interface FormProps {
 }
 
 export const Form: React.FC<FormProps> = ({ task, onInputChange, onEnter }) => {
-  const nameInput = useRef<HTMLInputElement>(null);
-  useEffect(() => {
-    if (nameInput.current) {
-      nameInput.current.focus();
-    }
-  }, []);
   return (
     <>
       <StyledForm>
         <StyledInputGroup>
           <StyledLabel>Name</StyledLabel>
           <StyledInput
-            ref={nameInput}
+            autoFocus
             placeholder="enter task name"
             name="name"
             value={task.name}

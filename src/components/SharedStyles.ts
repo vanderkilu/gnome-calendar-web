@@ -36,6 +36,8 @@ export const StyledSelect = styled.select`
   border-radius: 3px;
   border: 1px solid #e0e0e0;
   background-color: transparent;
+  font-size: 1.4rem;
+  color: #616161;
   width: 90%;
 `;
 export const StyledOption = styled.option`

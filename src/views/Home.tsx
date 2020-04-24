@@ -14,7 +14,6 @@ import { Form } from "../components/TaskModalForm";
 import TaskModal from "../components/TaskModal";
 import { StyledFooter } from "../components/TaskModal";
 import Button from "../components/Button";
-import useForm from "../hooks/useForm";
 
 import styled from "styled-components";
 import moment from "moment";
@@ -46,7 +45,7 @@ type FormEventAction =
   | { type: "SELECTED_DATE"; payload: string }
   | { type: "IS_BRIEF_VISIBLE"; payload: boolean }
   | { type: "IS_DETAIL_VISIBLE"; payload: boolean }
-  | { type: "FORM_UPDATE"; payload: { event: IEvent } }
+  | { type: "FORM_UPDATE"; payload: { name: string; value: string } }
   | { type: "RESET_NAME" };
 
 const FormEventInitialState = {
@@ -81,7 +80,13 @@ const FormEventReducer = (state: FormEvent, action: FormEventAction) => {
     case "FORM_UPDATE":
       return {
         ...state,
-        event: action.payload.event
+        event: {
+          ...state.event,
+          task: {
+            ...state.event.task,
+            [action.payload.name]: action.payload.value
+          }
+        }
       };
     case "RESET_NAME":
       return {
@@ -114,7 +119,13 @@ const HomePage: React.FC<{}> = () => {
     setFormEvent({ type: "SELECTED_DATE", payload: date });
   };
   const handleOnSave = () => {
-    const event = formEvent.event;
+    const task = formEvent.event.task;
+    console.log("task", task);
+    const event = {
+      task,
+      date: formEvent.selectedDate,
+      id: ID()
+    };
     dispatch({ type: "ADD_EVENT", payload: { event } }); // add event to globale events
     setFormEvent({ type: "EVENT", payload: { event } }); //set the current event
     setFormEvent({ type: "IS_BRIEF_VISIBLE", payload: false });
@@ -125,6 +136,8 @@ const HomePage: React.FC<{}> = () => {
     setFormEvent({ type: "IS_DETAIL_VISIBLE", payload: true });
   };
   const handleOnEdit = () => {
+    const event = formEvent.event;
+    dispatch({ type: "UPDATE_EVENT", payload: { event } });
     setFormEvent({ type: "IS_DETAIL_VISIBLE", payload: false });
   };
   const handleOnDelete = () => {};
@@ -137,13 +150,8 @@ const HomePage: React.FC<{}> = () => {
   };
 
   const updateForm = (e: ChangeEventType) => {
-    const event: IEvent = {
-      task: { [e.target.name]: e.target.value },
-      date: formEvent.selectedDate,
-      id: ID()
-    };
-    console.log("form", event);
-    setFormEvent({ type: "FORM_UPDATE", payload: { event } });
+    const { name, value } = e.target;
+    setFormEvent({ type: "FORM_UPDATE", payload: { name, value } });
   };
 
   const hasTask = formEvent.event.task.name !== "";
