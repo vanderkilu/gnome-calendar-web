@@ -140,7 +140,11 @@ const HomePage: React.FC<{}> = () => {
     dispatch({ type: "UPDATE_EVENT", payload: { event } });
     setFormEvent({ type: "IS_DETAIL_VISIBLE", payload: false });
   };
-  const handleOnDelete = () => {};
+  const handleOnDelete = () => {
+    const { id } = formEvent.event;
+    dispatch({ type: "DELETE_EVENT", payload: { id } });
+    setFormEvent({ type: "IS_DETAIL_VISIBLE", payload: false });
+  };
   const handleCellEventClick = (id: string) => {
     const currentEvent = state.events.find(event => event.id === id);
     if (currentEvent) {
