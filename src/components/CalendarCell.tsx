@@ -25,7 +25,7 @@ const CellText = styled.p`
   font-size: 1.7rem;
   color: "#b8bac3";
 `;
-const CellEvent = styled.div`
+export const CellEvent = styled.div`
   padding: 0.5rem;
   border-radius: 2px;
   background-color: #e8f5e9;
@@ -52,6 +52,7 @@ interface CalendarCellProps {
   today: number;
   onClick: (dayStr: string, position?: IPosition) => void;
   onCellEventClick: (id: string) => void;
+  onOverflowClick: (e: ChangeEventType) => void;
 }
 
 interface CellProps {
@@ -59,6 +60,7 @@ interface CellProps {
   onClick: (passed: boolean, dateStr: string, position?: IPosition) => void;
   today: number;
   onCellEventClick: (id: string) => void;
+  onOverflowClick: (e: ChangeEventType) => void;
 }
 type ChangeEventType = React.MouseEvent<HTMLDivElement, MouseEvent>;
 
@@ -66,7 +68,8 @@ const Cell: React.FC<CellProps> = ({
   eventItem,
   today,
   onClick,
-  onCellEventClick
+  onCellEventClick,
+  onOverflowClick
 }) => {
   const { day, passed, dateStr, events } = eventItem;
   const cellRef = useRef<HTMLDivElement>(null);
@@ -108,7 +111,11 @@ const Cell: React.FC<CellProps> = ({
             {event && event.task && event.task.name}
           </CellEvent>
         ))}
-      {isManyEvents && <CellManyEvent>+{overDue}</CellManyEvent>}
+      {isManyEvents && (
+        <CellManyEvent onClick={(e: ChangeEventType) => onOverflowClick(e)}>
+          +{overDue}
+        </CellManyEvent>
+      )}
     </StyledCell>
   );
 };
@@ -117,7 +124,8 @@ const CalendarCell: React.FC<CalendarCellProps> = ({
   days,
   today,
   onClick,
-  onCellEventClick
+  onCellEventClick,
+  onOverflowClick
 }) => {
   const handleClick = (
     passed: boolean,
@@ -138,6 +146,7 @@ const CalendarCell: React.FC<CalendarCellProps> = ({
             onClick={handleClick}
             key={ID()}
             onCellEventClick={onCellEventClick}
+            onOverflowClick={onOverflowClick}
           />
         ))}
       </CellContainer>

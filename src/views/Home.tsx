@@ -3,7 +3,7 @@ import Picker, {
   StyledPickerWrapper,
   StyledPickerGroup
 } from "../components/Picker";
-import CalendarCell from "../components/CalendarCell";
+import CalendarCell, { CellEvent } from "../components/CalendarCell";
 import CalendarHeader from "../components/CalendarHeader";
 import useCalendar from "../hooks/useCalendar";
 import { useEvents } from "../contexts/event";
@@ -23,6 +23,8 @@ type ChangeEventType =
   | React.ChangeEvent<HTMLSelectElement>
   | React.ChangeEvent<HTMLTextAreaElement>;
 
+type DivEventType = React.MouseEvent<HTMLDivElement, MouseEvent>;
+
 const StyledCalendarContainer = styled.div`
   padding: 5rem;
 `;
@@ -38,6 +40,7 @@ type FormEvent = {
   selectedDate: string;
   isBriefVisible: boolean;
   isDetailVisible: boolean;
+  isOverflowVisible: boolean;
 };
 
 type FormEventAction =
@@ -45,6 +48,7 @@ type FormEventAction =
   | { type: "SELECTED_DATE"; payload: string }
   | { type: "IS_BRIEF_VISIBLE"; payload: boolean }
   | { type: "IS_DETAIL_VISIBLE"; payload: boolean }
+  | { type: "IS_OVERFLOW_VISIBLE"; payload: boolean }
   | { type: "FORM_UPDATE"; payload: { name: string; value: string } }
   | { type: "RESET_NAME" };
 
@@ -52,7 +56,8 @@ const FormEventInitialState = {
   event: { task: { name: "" }, date: "", id: "" },
   selectedDate: "",
   isBriefVisible: false,
-  isDetailVisible: false
+  isDetailVisible: false,
+  isOverflowVisible: false
 };
 
 const FormEventReducer = (state: FormEvent, action: FormEventAction) => {
@@ -76,6 +81,11 @@ const FormEventReducer = (state: FormEvent, action: FormEventAction) => {
       return {
         ...state,
         isDetailVisible: action.payload
+      };
+    case "IS_OVERFLOW_VISIBLE":
+      return {
+        ...state,
+        isOverflowVisible: action.payload
       };
     case "FORM_UPDATE":
       return {
@@ -120,7 +130,6 @@ const HomePage: React.FC<{}> = () => {
   };
   const handleOnSave = () => {
     const task = formEvent.event.task;
-    console.log("task", task);
     const event = {
       task,
       date: formEvent.selectedDate,
@@ -133,6 +142,7 @@ const HomePage: React.FC<{}> = () => {
   };
   const handleOnDetail = () => {
     setFormEvent({ type: "IS_BRIEF_VISIBLE", payload: false });
+    setFormEvent({ type: "IS_OVERFLOW_VISIBLE", payload: false });
     setFormEvent({ type: "IS_DETAIL_VISIBLE", payload: true });
   };
   const handleOnEdit = () => {
@@ -152,6 +162,18 @@ const HomePage: React.FC<{}> = () => {
     }
     setFormEvent({ type: "IS_DETAIL_VISIBLE", payload: true });
   };
+  const handleOnOverflow = (e: DivEventType) => {
+    e.stopPropagation();
+    setFormEvent({ type: "IS_OVERFLOW_VISIBLE", payload: true });
+  };
+  const handleOnOverflowClick = (id: string) => {
+    handleCellEventClick(id);
+    handleOnDetail();
+  };
+
+  const eventsForSelectedDate = state.events.filter(
+    event => event.date === formEvent.selectedDate
+  );
 
   const updateForm = (e: ChangeEventType) => {
     const { name, value } = e.target;
@@ -176,6 +198,7 @@ const HomePage: React.FC<{}> = () => {
           today={todayDate}
           onClick={handleOnClick}
           onCellEventClick={handleCellEventClick}
+          onOverflowClick={handleOnOverflow}
         />
       </StyledCalendarContainer>
       <TaskModal
@@ -220,6 +243,19 @@ const HomePage: React.FC<{}> = () => {
           task={formEvent.event.task}
           onInputChange={(e: ChangeEventType) => updateForm(e)}
         />
+      </TaskModal>
+      <TaskModal
+        isOpen={formEvent.isOverflowVisible}
+        onClose={() =>
+          setFormEvent({ type: "IS_OVERFLOW_VISIBLE", payload: false })
+        }
+        footer={<></>}
+      >
+        {eventsForSelectedDate.map(event => (
+          <CellEvent onClick={() => handleOnOverflowClick(event.id)} key={ID()}>
+            {event.task.name}
+          </CellEvent>
+        ))}
       </TaskModal>
     </>
   );
