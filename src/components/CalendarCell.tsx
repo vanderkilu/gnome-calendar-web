@@ -53,6 +53,9 @@ interface CalendarCellProps {
   onClick: (dayStr: string, position?: IPosition) => void;
   onCellEventClick: (id: string) => void;
   onOverflowClick: (e: ChangeEventType, dateStr: string) => void;
+  onDragStart: (e: DragEventType, id: string) => void;
+  onDrop: (e: DragEventType, dateStr: string) => void;
+  onDragOver: (e: DragEventType) => void;
 }
 
 interface CellProps {
@@ -61,15 +64,22 @@ interface CellProps {
   today: number;
   onCellEventClick: (id: string) => void;
   onOverflowClick: (e: ChangeEventType, dateStr: string) => void;
+  onDragStart: (e: DragEventType, id: string) => void;
+  onDrop: (e: DragEventType, dateStr: string) => void;
+  onDragOver: (e: DragEventType) => void;
 }
 type ChangeEventType = React.MouseEvent<HTMLDivElement, MouseEvent>;
+type DragEventType = React.DragEvent<HTMLDivElement>;
 
 const Cell: React.FC<CellProps> = ({
   eventItem,
   today,
   onClick,
   onCellEventClick,
-  onOverflowClick
+  onOverflowClick,
+  onDragStart,
+  onDragOver,
+  onDrop
 }) => {
   const { day, passed, dateStr, events } = eventItem;
   const cellRef = useRef<HTMLDivElement>(null);
@@ -98,6 +108,8 @@ const Cell: React.FC<CellProps> = ({
       key={ID()}
       isToday={day === today}
       onClick={() => handleClick(passed, dateStr)}
+      onDrop={(e: DragEventType) => onDrop(e, eventItem.dateStr)}
+      onDragOver={(e: DragEventType) => onDragOver(e)}
     >
       {!passed && <CellText>{day}</CellText>}
       {hasEvent &&
@@ -106,6 +118,8 @@ const Cell: React.FC<CellProps> = ({
             onClick={(e: ChangeEventType) =>
               handleOnEventCellClick(e, event.id)
             }
+            draggable="true"
+            onDragStart={(e: DragEventType) => onDragStart(e, event.id)}
             key={ID()}
           >
             {event && event.task && event.task.name}
@@ -127,7 +141,10 @@ const CalendarCell: React.FC<CalendarCellProps> = ({
   today,
   onClick,
   onCellEventClick,
-  onOverflowClick
+  onOverflowClick,
+  onDragStart,
+  onDragOver,
+  onDrop
 }) => {
   const handleClick = (
     passed: boolean,
@@ -149,6 +166,9 @@ const CalendarCell: React.FC<CalendarCellProps> = ({
             key={ID()}
             onCellEventClick={onCellEventClick}
             onOverflowClick={onOverflowClick}
+            onDragStart={onDragStart}
+            onDrop={onDrop}
+            onDragOver={onDragOver}
           />
         ))}
       </CellContainer>

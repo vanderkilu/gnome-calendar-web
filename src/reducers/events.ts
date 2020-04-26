@@ -12,6 +12,16 @@ export const EventInitialState = {
   error: null
 };
 
+const transformEvents = (
+  events: IEvent[],
+  id: string,
+  dateStr: string
+): IEvent[] => {
+  const event = events.find(event => event.id === id);
+  const newEvent = { ...event, ...{ date: dateStr } } as IEvent;
+  return events.map(event => (event.id === id ? newEvent : event));
+};
+
 export type EventAction =
   | { type: "FETCH_EVENTS_BEGIN" }
   | { type: "FETCH_EVENTS_SUCCESS"; payload: { events: IEvent[] } }
@@ -19,7 +29,8 @@ export type EventAction =
   | { type: "ADD_EVENT_START"; payload: { event: IEvent } }
   | { type: "ADD_EVENT"; payload: { event: IEvent } }
   | { type: "UPDATE_EVENT"; payload: { event: IEvent } }
-  | { type: "DELETE_EVENT"; payload: { id: string } };
+  | { type: "DELETE_EVENT"; payload: { id: string } }
+  | { type: "SWAP_EVENT"; payload: { id: string; dateStr: string } };
 
 export function EventReducer(
   state: EventState = EventInitialState,
@@ -60,6 +71,15 @@ export function EventReducer(
         ...state,
         events: state.events.map(event =>
           event.id === action.payload.event.id ? action.payload.event : event
+        )
+      };
+    case "SWAP_EVENT":
+      return {
+        ...state,
+        events: transformEvents(
+          state.events,
+          action.payload.id,
+          action.payload.dateStr
         )
       };
     default:

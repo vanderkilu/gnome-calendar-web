@@ -24,6 +24,7 @@ type ChangeEventType =
   | React.ChangeEvent<HTMLTextAreaElement>;
 
 type DivEventType = React.MouseEvent<HTMLDivElement, MouseEvent>;
+type DragEventType = React.DragEvent<HTMLDivElement>;
 
 const StyledCalendarContainer = styled.div`
   padding: 5rem;
@@ -179,6 +180,19 @@ const HomePage: React.FC<{}> = () => {
     handleOnDetail();
   };
 
+  const handleOnDragStart = (e: DragEventType, id: string) => {
+    e.dataTransfer.setData("text/plain", id);
+    e.dataTransfer.dropEffect = "copy";
+  };
+  const handleOnDrop = (e: DragEventType, dateStr: string) => {
+    const id = e.dataTransfer.getData("text/plain");
+    dispatch({ type: "SWAP_EVENT", payload: { id, dateStr } });
+  };
+  const handleOnDragOver = (e: DragEventType) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+  };
+
   const eventsForSelectedDate = state.events.filter(
     event => event.date === formEvent.selectedDate
   );
@@ -208,6 +222,9 @@ const HomePage: React.FC<{}> = () => {
           onClick={handleOnClick}
           onCellEventClick={handleCellEventClick}
           onOverflowClick={handleOnOverflow}
+          onDragStart={handleOnDragStart}
+          onDrop={handleOnDrop}
+          onDragOver={handleOnDragOver}
         />
       </StyledCalendarContainer>
       <TaskModal
