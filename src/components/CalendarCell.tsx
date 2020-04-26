@@ -101,6 +101,10 @@ const Cell: React.FC<CellProps> = ({
     onCellEventClick(id);
     e.stopPropagation();
   };
+  const handleOnDrop = (e: DragEventType, dateStr: string, passed: boolean) => {
+    if (passed) return;
+    onDrop(e, dateStr);
+  };
 
   return (
     <StyledCell
@@ -108,7 +112,7 @@ const Cell: React.FC<CellProps> = ({
       key={ID()}
       isToday={day === today}
       onClick={() => handleClick(passed, dateStr)}
-      onDrop={(e: DragEventType) => onDrop(e, eventItem.dateStr)}
+      onDrop={(e: DragEventType) => handleOnDrop(e, eventItem.dateStr, passed)}
       onDragOver={(e: DragEventType) => onDragOver(e)}
     >
       {!passed && <CellText>{day}</CellText>}
