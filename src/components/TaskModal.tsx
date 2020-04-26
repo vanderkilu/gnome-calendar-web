@@ -9,7 +9,7 @@ const StyledContainer = styled.div`
   height: 100%;
   width: 100%;
   background-color: rgba(0, 0, 0, 0.1);
-  z-index: 50;
+  z-index: 5;
 `;
 
 const StyledModal = styled.div<{
@@ -26,7 +26,7 @@ const StyledModal = styled.div<{
   box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.05);
   min-height: 20rem;
   padding: 0.5rem 1rem;
-  z-index: 20;
+  z-index: 6;
   ${props =>
     props.width &&
     css`
@@ -45,7 +45,7 @@ const StyledToolTip = styled.div<{
   width: 4rem;
   height: 4rem;
   background-color: #ffffff;
-  z-index: 10;
+  z-index: 4;
 `;
 
 const StyledHeader = styled.div`
