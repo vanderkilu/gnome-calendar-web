@@ -29,7 +29,24 @@ export default function(date: moment.Moment, events: IEvent[]) {
       dateStr
     };
   });
+  const rawDays = daysInMonth();
+
+  const generateWeekHeading = () => {
+    let weeks: number[][] = [];
+    let tdays: number[] = [];
+    rawDays.forEach((day, i) => {
+      if ((i + 1) % 7 !== 0) tdays = [...tdays, day];
+      else {
+        weeks = [...weeks, tdays];
+        tdays = [];
+      }
+    });
+    return weeks;
+  };
+
+  const weeks = generateWeekHeading();
+
   const todayDate = parseInt(date.format("D"));
 
-  return { formattedDays, todayDate };
+  return { formattedDays, todayDate, weeks };
 }
