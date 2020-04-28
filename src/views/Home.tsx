@@ -14,6 +14,7 @@ import { Form } from "../components/TaskModalForm";
 import TaskModal from "../components/TaskModal";
 import { StyledFooter } from "../components/TaskModal";
 import Button from "../components/Button";
+import Switch, { StyledGroupSwitch } from "../components/Switch";
 
 import styled from "styled-components";
 import moment from "moment";
@@ -204,12 +205,18 @@ const HomePage: React.FC<{}> = () => {
   };
 
   const hasTask = formEvent.event.task.name !== "";
+  const switchView = (id: string) => {};
 
   return (
     <>
       <StyledCalendarContainer>
         <StyledPickerWrapper>
           <H3>task calendar</H3>
+          <StyledGroupSwitch>
+            <Switch id="week" onClick={switchView} />
+            <Switch id="month" onClick={switchView} />
+            <Switch id="year" onClick={switchView} />
+          </StyledGroupSwitch>
           <StyledPickerGroup>
             <Picker date={date} type="month" setDate={updateDate} key={ID()} />
             <Picker date={date} type="year" setDate={updateDate} key={ID()} />
