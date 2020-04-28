@@ -7,8 +7,14 @@ const StyledSwitch = styled.button`
   border: 1px solid #b8bac3;
   border-radius: 5px;
   background-color: transparent;
-  &:active {
+  font-size: 1.2rem;
+  font: inherit;
+  &:active,
+  &:visited,
+  &:focus {
     background-color: #c8e6c9;
+    border: 1px solid #c8e6c9;
+    outline: none;
   }
   &:not(:last-child) {
     margin-right: 0.1rem;
