@@ -22,3 +22,8 @@ export interface IPosition {
   width: number;
   bottom: number;
 }
+
+export interface IWeek {
+  days: number[];
+  weekDays: string[];
+}

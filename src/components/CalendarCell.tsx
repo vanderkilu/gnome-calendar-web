@@ -71,7 +71,7 @@ interface CellProps {
 type ChangeEventType = React.MouseEvent<HTMLDivElement, MouseEvent>;
 type DragEventType = React.DragEvent<HTMLDivElement>;
 
-const Cell: React.FC<CellProps> = ({
+export const Cell: React.FC<CellProps> = ({
   eventItem,
   today,
   onClick,
