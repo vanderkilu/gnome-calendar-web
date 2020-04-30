@@ -17,19 +17,19 @@ const StyledWeekContainer = styled.div`
   grid-template-columns: repeat(7, 1fr);
 `;
 const StyledWeekCell = styled.div`
-  height: 10rem;
-  position: relative;
+  height: 5rem;
   background-color: "transparent";
   border: 1px solid #f3f4f9;
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
   flex-direction: column;
-  padding-top: 0.5rem;
+  padding: 0.2rem;
+  overflow: hidden;
 `;
 
 const StyledWeekCellText = styled.p`
-  font-size: 1.7rem;
+  font-size: 1.2rem;
   color: "#b8bac3";
 `;
 
@@ -37,9 +37,7 @@ const StyledWeekCellEvent = styled.div`
   padding: 0.5rem;
   border-radius: 2px;
   background-color: #e8f5e9;
-  font-size: 1rem;
   color: #81c784;
-  margin-bottom: 0.5rem;
   cursor: pointer;
   height: 100%;
   width: 100%;
