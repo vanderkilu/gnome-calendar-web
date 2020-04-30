@@ -51,6 +51,7 @@ type FormEvent = {
   isBriefVisible: boolean;
   isDetailVisible: boolean;
   isOverflowVisible: boolean;
+  weekRow: number;
 };
 
 type FormEventAction =
@@ -60,14 +61,16 @@ type FormEventAction =
   | { type: "IS_DETAIL_VISIBLE"; payload: boolean }
   | { type: "IS_OVERFLOW_VISIBLE"; payload: boolean }
   | { type: "FORM_UPDATE"; payload: { name: string; value: string } }
-  | { type: "RESET_NAME" };
+  | { type: "RESET_NAME" }
+  | { type: "SET_WEEK_ROW"; payload: number };
 
 const FormEventInitialState = {
   event: { task: { name: "" }, date: "", id: "" },
   selectedDate: "",
   isBriefVisible: false,
   isDetailVisible: false,
-  isOverflowVisible: false
+  isOverflowVisible: false,
+  weekRow: 0
 };
 
 const FormEventReducer = (state: FormEvent, action: FormEventAction) => {
@@ -113,6 +116,11 @@ const FormEventReducer = (state: FormEvent, action: FormEventAction) => {
         ...state,
         event: { ...state.event, ...{ task: { name: "" } } }
       };
+    case "SET_WEEK_ROW":
+      return {
+        ...state,
+        weekRow: action.payload
+      };
     default:
       return state;
   }
@@ -141,12 +149,21 @@ const HomePage: React.FC<{}> = () => {
     setFormEvent({ type: "IS_BRIEF_VISIBLE", payload: true });
     setFormEvent({ type: "SELECTED_DATE", payload: date });
   };
+  const handleWeekOnClick = (
+    date: string,
+    weekRow: number,
+    position?: IPosition
+  ) => {
+    handleOnClick(date, position);
+    setFormEvent({ type: "SET_WEEK_ROW", payload: weekRow });
+  };
   const handleOnSave = () => {
     const task = formEvent.event.task;
     const event = {
       task,
       date: formEvent.selectedDate,
-      id: ID()
+      id: ID(),
+      weekRow: formEvent.weekRow
     };
     dispatch({ type: "ADD_EVENT", payload: { event } }); // add event to globale events
     setFormEvent({ type: "EVENT", payload: { event } }); //set the current event
@@ -210,18 +227,6 @@ const HomePage: React.FC<{}> = () => {
 
   const hasTask = formEvent.event.task.name !== "";
   const switchView = (id: string) => {};
-  const times = Array(24)
-    .fill(0)
-    .map(index => (index < 10 ? `0${index}:00` : `${index}:00`));
-
-  console.log("weeks", formattedWeeks);
-  const handleOnClickCover = (
-    passed: boolean,
-    date: string,
-    position?: IPosition
-  ) => {
-    handleOnClick(date, position);
-  };
 
   return (
     <>
@@ -239,7 +244,7 @@ const HomePage: React.FC<{}> = () => {
           </StyledPickerGroup>
         </StyledPickerWrapper>
         <CalendarHeader />
-        {true ? (
+        {false ? (
           <CalendarCell
             days={formattedDays}
             today={todayDate}
@@ -251,22 +256,12 @@ const HomePage: React.FC<{}> = () => {
             onDragOver={handleOnDragOver}
           />
         ) : (
-          <WeekView weekDays={["m", "t", "w", "t", "f", "s", "s"]}>
-            {times.map(_ =>
-              formattedWeeks[0].map(eventItem => (
-                <Cell
-                  today={29}
-                  eventItem={eventItem}
-                  onClick={handleOnClickCover}
-                  onCellEventClick={handleCellEventClick}
-                  onDragOver={handleOnDragOver}
-                  onOverflowClick={() => null}
-                  onDragStart={handleOnDragStart}
-                  onDrop={handleOnDrop}
-                />
-              ))
-            )}
-          </WeekView>
+          <WeekView
+            weekDays={["m", "t", "w", "t", "f", "s", "s"]}
+            events={formattedWeeks[0]}
+            onCellEventClick={() => null}
+            onClick={handleWeekOnClick}
+          />
         )}
       </StyledCalendarContainer>
       <TaskModal

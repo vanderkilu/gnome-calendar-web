@@ -13,6 +13,7 @@ export interface IEvent {
   task: ITask;
   date: string;
   id: string;
+  weekRow?: number;
 }
 
 export interface IPosition {
