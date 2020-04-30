@@ -19,24 +19,26 @@ export default function(date: moment.Moment, events: IEvent[]) {
       .set("date", day)
       .toString();
   };
-  const formattedDays = days.map(day => {
-    const dateStr = dayDate(day);
-    const cellEvents = events.filter(event => event.date === dateStr);
-    return {
-      day: day,
-      passed: day === 0,
-      events: cellEvents,
-      dateStr
-    };
-  });
+  const formatDays = (days: number[]) =>
+    days.map(day => {
+      const dateStr = dayDate(day);
+      const cellEvents = events.filter(event => event.date === dateStr);
+      return {
+        day: day,
+        passed: day === 0,
+        events: cellEvents,
+        dateStr
+      };
+    });
   const rawDays = daysInMonth();
 
-  const generateWeekHeading = () => {
+  const generateWeeks = () => {
     let weeks: number[][] = [];
     let tdays: number[] = [];
     rawDays.forEach((day, i) => {
       if ((i + 1) % 7 !== 0) tdays = [...tdays, day];
       else {
+        tdays = [...tdays, day];
         weeks = [...weeks, tdays];
         tdays = [];
       }
@@ -44,9 +46,11 @@ export default function(date: moment.Moment, events: IEvent[]) {
     return weeks;
   };
 
-  const weeks = generateWeekHeading();
+  const weeksEvents = generateWeeks();
+  const formattedDays = formatDays(days);
+  const formattedWeeks = weeksEvents.map(weekArr => formatDays(weekArr));
 
   const todayDate = parseInt(date.format("D"));
 
-  return { formattedDays, todayDate, weeks };
+  return { formattedDays, todayDate, formattedWeeks };
 }

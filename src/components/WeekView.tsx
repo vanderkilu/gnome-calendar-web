@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useRef } from "react";
 import styled from "styled-components";
-import { ICell } from "../types";
+import { ICell, IPosition } from "../types";
 
 const StyledHeaderElement = styled.div`
   border: 1px solid #b8bac3;
@@ -26,6 +26,14 @@ const StyledWeekCell = styled.div`
   padding-top: 0.5rem;
 `;
 
+const StyledWeekCellText = styled.p`
+  position: absolute;
+  right: 1rem;
+  top: 0.2rem;
+  font-size: 1.7rem;
+  color: "#b8bac3";
+`;
+
 const StyledWeekCellEvent = styled.div`
   padding: 0.5rem;
   border-radius: 2px;
@@ -39,9 +47,6 @@ const StyledSidebarContainer = styled.div``;
 
 interface HeaderProps {
   weekDays: string[];
-  events: ICell[];
-  onClick: () => void;
-  onCellEventClick: (e: ChangeEventType, id: string) => void;
 }
 
 const times = Array(24)
@@ -50,8 +55,8 @@ const times = Array(24)
 
 interface WeekCellProps {
   eventItem: ICell;
-  onClick: (day: number, dateStr: string) => void;
-  onCellEventClick: (e: ChangeEventType, id: string) => void;
+  onClick: (date: string, position?: IPosition) => void;
+  onCellEventClick: (id: string) => void;
 }
 type ChangeEventType = React.MouseEvent<HTMLDivElement, MouseEvent>;
 
@@ -62,25 +67,28 @@ const WeekCell: React.FC<WeekCellProps> = ({
 }) => {
   const { day, dateStr, events } = eventItem;
   const event = events[0];
+  const cellRef = useRef<HTMLDivElement>(null);
+  const handleClick = (dateStr: string) => {
+    const position = cellRef.current && cellRef.current.getBoundingClientRect();
+    if (position) onClick(dateStr, position);
+    else onClick(dateStr);
+  };
   return (
     <>
-      <StyledWeekCell onClick={(e: ChangeEventType) => onClick(day, dateStr)}>
-        <StyledWeekCellEvent
-          onClick={(e: ChangeEventType) => onCellEventClick(e, event.id)}
-        >
-          {event && event.task.name}
-        </StyledWeekCellEvent>
+      <StyledWeekCell onClick={(e: ChangeEventType) => handleClick(dateStr)}>
+        {event && event.task && (
+          <StyledWeekCellEvent
+            onClick={(e: ChangeEventType) => onCellEventClick(event.id)}
+          >
+            <StyledWeekCellText>{event.task.name}</StyledWeekCellText>
+          </StyledWeekCellEvent>
+        )}
       </StyledWeekCell>
     </>
   );
 };
 
-const WeekView: React.FC<HeaderProps> = ({
-  weekDays,
-  events,
-  onClick,
-  onCellEventClick
-}) => {
+const WeekView: React.FC<HeaderProps> = ({ weekDays, children }) => {
   return (
     <>
       <StyledWeekContainer>
@@ -90,17 +98,12 @@ const WeekView: React.FC<HeaderProps> = ({
           </StyledHeaderElement>
         ))}
       </StyledWeekContainer>
-      <StyledWeekContainer>
-        {times.map(_ =>
-          events.map(eventItem => (
-            <WeekCell
-              onClick={onClick}
-              eventItem={eventItem}
-              onCellEventClick={onCellEventClick}
-            />
-          ))
-        )}
-      </StyledWeekContainer>
+      {/* <StyledSidebarContainer>
+        {times.map(time => (
+          <StyledText>{time}</StyledText>
+        ))}
+      </StyledSidebarContainer> */}
+      <StyledWeekContainer>{children}</StyledWeekContainer>
     </>
   );
 };

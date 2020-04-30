@@ -3,7 +3,7 @@ import Picker, {
   StyledPickerWrapper,
   StyledPickerGroup
 } from "../components/Picker";
-import CalendarCell, { CellEvent } from "../components/CalendarCell";
+import CalendarCell, { CellEvent, Cell } from "../components/CalendarCell";
 import CalendarHeader from "../components/CalendarHeader";
 import useCalendar from "../hooks/useCalendar";
 import { useEvents } from "../contexts/event";
@@ -15,6 +15,7 @@ import TaskModal from "../components/TaskModal";
 import { StyledFooter } from "../components/TaskModal";
 import Button from "../components/Button";
 import Switch, { StyledGroupSwitch } from "../components/Switch";
+import WeekView from "../components/WeekView";
 
 import styled from "styled-components";
 import moment from "moment";
@@ -126,7 +127,10 @@ const HomePage: React.FC<{}> = () => {
     FormEventInitialState
   );
   const [pos, setPos] = useState<IPosition>();
-  const { formattedDays, todayDate } = useCalendar(date, state.events);
+  const { formattedDays, todayDate, formattedWeeks } = useCalendar(
+    date,
+    state.events
+  );
 
   const updateDate = (type: moment.unitOfTime.All, index: number) => {
     setDate(moment(date).set(type, index));
@@ -206,6 +210,18 @@ const HomePage: React.FC<{}> = () => {
 
   const hasTask = formEvent.event.task.name !== "";
   const switchView = (id: string) => {};
+  const times = Array(24)
+    .fill(0)
+    .map(index => (index < 10 ? `0${index}:00` : `${index}:00`));
+
+  console.log("weeks", formattedWeeks);
+  const handleOnClickCover = (
+    passed: boolean,
+    date: string,
+    position?: IPosition
+  ) => {
+    handleOnClick(date, position);
+  };
 
   return (
     <>
@@ -223,16 +239,35 @@ const HomePage: React.FC<{}> = () => {
           </StyledPickerGroup>
         </StyledPickerWrapper>
         <CalendarHeader />
-        <CalendarCell
-          days={formattedDays}
-          today={todayDate}
-          onClick={handleOnClick}
-          onCellEventClick={handleCellEventClick}
-          onOverflowClick={handleOnOverflow}
-          onDragStart={handleOnDragStart}
-          onDrop={handleOnDrop}
-          onDragOver={handleOnDragOver}
-        />
+        {true ? (
+          <CalendarCell
+            days={formattedDays}
+            today={todayDate}
+            onClick={handleOnClick}
+            onCellEventClick={handleCellEventClick}
+            onOverflowClick={handleOnOverflow}
+            onDragStart={handleOnDragStart}
+            onDrop={handleOnDrop}
+            onDragOver={handleOnDragOver}
+          />
+        ) : (
+          <WeekView weekDays={["m", "t", "w", "t", "f", "s", "s"]}>
+            {times.map(_ =>
+              formattedWeeks[0].map(eventItem => (
+                <Cell
+                  today={29}
+                  eventItem={eventItem}
+                  onClick={handleOnClickCover}
+                  onCellEventClick={handleCellEventClick}
+                  onDragOver={handleOnDragOver}
+                  onOverflowClick={() => null}
+                  onDragStart={handleOnDragStart}
+                  onDrop={handleOnDrop}
+                />
+              ))
+            )}
+          </WeekView>
+        )}
       </StyledCalendarContainer>
       <TaskModal
         isOpen={formEvent.isBriefVisible}
