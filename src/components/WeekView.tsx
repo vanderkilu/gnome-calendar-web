@@ -79,6 +79,10 @@ const WeekCell: React.FC<WeekCellProps> = ({
     if (position) onClick(dateStr, weekRow, position);
     else onClick(dateStr, weekRow);
   };
+  const handleOnCellEventClick = (e: ChangeEventType, id: string) => {
+    e.stopPropagation();
+    onCellEventClick(id);
+  };
   return (
     <>
       <StyledWeekCell
@@ -87,7 +91,9 @@ const WeekCell: React.FC<WeekCellProps> = ({
       >
         {event && event.task && event.weekRow === weekRow && (
           <StyledWeekCellEvent
-            onClick={(e: ChangeEventType) => onCellEventClick(event.id)}
+            onClick={(e: ChangeEventType) =>
+              handleOnCellEventClick(e, event.id)
+            }
           >
             <StyledWeekCellText>{event.task.name}</StyledWeekCellText>
           </StyledWeekCellEvent>

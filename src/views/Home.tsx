@@ -259,7 +259,7 @@ const HomePage: React.FC<{}> = () => {
           <WeekView
             weekDays={["m", "t", "w", "t", "f", "s", "s"]}
             events={formattedWeeks[0]}
-            onCellEventClick={() => null}
+            onCellEventClick={handleCellEventClick}
             onClick={handleWeekOnClick}
           />
         )}
