@@ -1,13 +1,13 @@
 import React, { useRef } from "react";
 import styled from "styled-components";
-import { IPosition, IEvent } from "../types";
+import { IPosition, ICell } from "../types";
 import { ID } from "../utils";
 
 const CellContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(7, 1fr);
 `;
-const StyledCell = styled.div<{ isToday: boolean }>`
+export const StyledCell = styled.div<{ isToday: boolean }>`
   height: 10rem;
   position: relative;
   background-color: ${props => (props.isToday ? "#c8e6c9" : "transparent")};
@@ -40,12 +40,6 @@ const CellManyEvent = styled.div`
   width: 100%;
   cursor: pointer;
 `;
-interface ICell {
-  day: number;
-  passed: boolean;
-  dateStr: string;
-  events: IEvent[];
-}
 
 interface CalendarCellProps {
   days: Array<ICell>;

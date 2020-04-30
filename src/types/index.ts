@@ -27,3 +27,10 @@ export interface IWeek {
   days: number[];
   weekDays: string[];
 }
+
+export interface ICell {
+  day: number;
+  passed: boolean;
+  dateStr: string;
+  events: IEvent[];
+}
