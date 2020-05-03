@@ -1,16 +1,27 @@
 import React, { useRef } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { ICell, IPosition } from "../types";
 import { ID } from "../utils";
 
+const StyledWeekLayout = styled.div`
+  display: grid;
+  grid-template-columns: 10rem 1fr;
+`;
 const StyledHeaderElement = styled.div`
   border: 1px solid #f3f4f9;
   border-top: none;
   border-bottom: none;
+  height: 10rem;
 `;
-const StyledText = styled.h3`
+const StyledText = styled.h3<{ align?: string }>`
   font-size: 1.5rem;
   color: #b8bac3;
+  text-align: ${props => props.align || "left"};
+`;
+const StyledHeaderText = styled.h3`
+  font-size: 1.7rem;
+  text-transform: uppercase;
+  color: #424242;
 `;
 const StyledWeekContainer = styled.div`
   display: grid;
@@ -30,6 +41,10 @@ const StyledWeekCell = styled.div`
 const StyledWeekCellText = styled.p`
   font-size: 1.2rem;
   color: "#b8bac3";
+  width: 80%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const StyledWeekCellEvent = styled.div`
@@ -42,7 +57,10 @@ const StyledWeekCellEvent = styled.div`
   margin-right: 0.1rem;
   flex: 1;
 `;
-const StyledSidebarContainer = styled.div``;
+const StyledSidebarContainer = styled.div`
+  grid-row: 1 / span 2;
+  margin-top: 10rem;
+`;
 type DragEventType = React.DragEvent<HTMLDivElement>;
 
 interface HeaderProps {
@@ -55,9 +73,9 @@ interface HeaderProps {
   onDragOver: (e: DragEventType) => void;
 }
 
-const times = Array(24)
-  .fill(0)
-  .map(index => (index < 10 ? `0${index}:00` : `${index}:00`));
+const times = Array.from(Array(24).keys()).map(index =>
+  index < 10 ? `0${index}:00` : `${index}:00`
+);
 
 interface WeekCellProps {
   eventItem: ICell;
@@ -132,30 +150,39 @@ const WeekView: React.FC<HeaderProps> = ({
 }) => {
   return (
     <>
-      <StyledWeekContainer>
-        {weekDays.map((weekName, i) => (
-          <StyledHeaderElement key={i}>
-            <StyledText>{weekName}</StyledText>
-            <StyledText>{events[i].day}</StyledText>
-          </StyledHeaderElement>
-        ))}
-      </StyledWeekContainer>
-      <StyledWeekContainer>
-        {times.map((_, i) =>
-          events.map(eventItem => (
-            <WeekCell
-              key={ID()}
-              eventItem={eventItem}
-              onCellEventClick={onCellEventClick}
-              onClick={onClick}
-              weekRow={i}
-              onDragOver={onDragOver}
-              onDragStart={onDragStart}
-              onDrop={onDrop}
-            />
-          ))
-        )}
-      </StyledWeekContainer>
+      <StyledWeekLayout>
+        <StyledSidebarContainer>
+          {times.map((time, i) => (
+            <StyledWeekCell key={i}>
+              <StyledText align="center">{time}</StyledText>
+            </StyledWeekCell>
+          ))}
+        </StyledSidebarContainer>
+        <StyledWeekContainer>
+          {weekDays.map((weekName, i) => (
+            <StyledHeaderElement key={i}>
+              <StyledHeaderText>{weekName}</StyledHeaderText>
+              <StyledHeaderText>{events[i].day}</StyledHeaderText>
+            </StyledHeaderElement>
+          ))}
+        </StyledWeekContainer>
+        <StyledWeekContainer>
+          {times.map((_, i) =>
+            events.map(eventItem => (
+              <WeekCell
+                key={ID()}
+                eventItem={eventItem}
+                onCellEventClick={onCellEventClick}
+                onClick={onClick}
+                weekRow={i}
+                onDragOver={onDragOver}
+                onDragStart={onDragStart}
+                onDrop={onDrop}
+              />
+            ))
+          )}
+        </StyledWeekContainer>
+      </StyledWeekLayout>
     </>
   );
 };

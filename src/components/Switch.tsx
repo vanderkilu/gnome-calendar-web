@@ -8,15 +8,25 @@ const StyledSwitch = styled.button`
   background-color: transparent;
   font-size: 1.2rem;
   font: inherit;
+  &:nth-child(1) {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  &:nth-child(3) {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+  &:nth-child(2) {
+    border-right: none;
+    border-left: none;
+    border-radius: 0;
+  }
   &:active,
   &:visited,
   &:focus {
     background-color: #c8e6c9;
     border: 1px solid #c8e6c9;
     outline: none;
-  }
-  &:not(:last-child) {
-    margin-right: 0.1rem;
   }
 `;
 
