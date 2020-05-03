@@ -23,7 +23,6 @@ const StyledWeekCell = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
-  flex-direction: column;
   padding: 0.2rem;
   overflow: hidden;
 `;
@@ -40,15 +39,20 @@ const StyledWeekCellEvent = styled.div`
   color: #81c784;
   cursor: pointer;
   height: 100%;
-  width: 100%;
+  margin-right: 0.1rem;
+  flex: 1;
 `;
 const StyledSidebarContainer = styled.div``;
+type DragEventType = React.DragEvent<HTMLDivElement>;
 
 interface HeaderProps {
   weekDays: string[];
   events: ICell[];
   onCellEventClick: (id: string) => void;
   onClick: (date: string, weekRow: number, position?: IPosition) => void;
+  onDragStart: (e: DragEventType, id: string) => void;
+  onDrop: (e: DragEventType, dateStr: string, weekRow: number) => void;
+  onDragOver: (e: DragEventType) => void;
 }
 
 const times = Array(24)
@@ -60,6 +64,9 @@ interface WeekCellProps {
   onClick: (date: string, weekRow: number, position?: IPosition) => void;
   onCellEventClick: (id: string) => void;
   weekRow: number;
+  onDragStart: (e: DragEventType, id: string) => void;
+  onDrop: (e: DragEventType, dateStr: string, weekRow: number) => void;
+  onDragOver: (e: DragEventType) => void;
 }
 type ChangeEventType = React.MouseEvent<HTMLDivElement, MouseEvent>;
 
@@ -67,10 +74,12 @@ const WeekCell: React.FC<WeekCellProps> = ({
   onClick,
   eventItem,
   onCellEventClick,
-  weekRow
+  weekRow,
+  onDragOver,
+  onDragStart,
+  onDrop
 }) => {
-  const { day, dateStr, events } = eventItem;
-  const event = events[0];
+  const { dateStr, events } = eventItem;
   const cellRef = useRef<HTMLDivElement>(null);
   const handleClick = (dateStr: string) => {
     const position = cellRef.current && cellRef.current.getBoundingClientRect();
@@ -84,18 +93,29 @@ const WeekCell: React.FC<WeekCellProps> = ({
   return (
     <>
       <StyledWeekCell
-        onClick={(e: ChangeEventType) => handleClick(dateStr)}
+        onClick={() => handleClick(dateStr)}
+        onDrop={(e: DragEventType) => onDrop(e, dateStr, weekRow)}
+        onDragOver={(e: DragEventType) => onDragOver(e)}
         ref={cellRef}
       >
-        {event && event.task && event.weekRow === weekRow && (
-          <StyledWeekCellEvent
-            onClick={(e: ChangeEventType) =>
-              handleOnCellEventClick(e, event.id)
-            }
-          >
-            <StyledWeekCellText>{event.task.name}</StyledWeekCellText>
-          </StyledWeekCellEvent>
-        )}
+        {events.length > 0 &&
+          events.map(
+            event =>
+              event.weekRow === weekRow && (
+                <StyledWeekCellEvent
+                  key={event.id}
+                  draggable="true"
+                  onDragStart={(e: DragEventType) => onDragStart(e, event.id)}
+                  onClick={(e: ChangeEventType) =>
+                    handleOnCellEventClick(e, event.id)
+                  }
+                >
+                  <StyledWeekCellText>
+                    {event.task && event.task.name}
+                  </StyledWeekCellText>
+                </StyledWeekCellEvent>
+              )
+          )}
       </StyledWeekCell>
     </>
   );
@@ -105,13 +125,16 @@ const WeekView: React.FC<HeaderProps> = ({
   weekDays,
   events,
   onCellEventClick,
-  onClick
+  onClick,
+  onDragOver,
+  onDragStart,
+  onDrop
 }) => {
   return (
     <>
       <StyledWeekContainer>
         {weekDays.map((weekName, i) => (
-          <StyledHeaderElement>
+          <StyledHeaderElement key={i}>
             <StyledText>{weekName}</StyledText>
             <StyledText>{events[i].day}</StyledText>
           </StyledHeaderElement>
@@ -126,6 +149,9 @@ const WeekView: React.FC<HeaderProps> = ({
               onCellEventClick={onCellEventClick}
               onClick={onClick}
               weekRow={i}
+              onDragOver={onDragOver}
+              onDragStart={onDragStart}
+              onDrop={onDrop}
             />
           ))
         )}

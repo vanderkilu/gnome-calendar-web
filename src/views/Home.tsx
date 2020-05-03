@@ -206,9 +206,13 @@ const HomePage: React.FC<{}> = () => {
     e.dataTransfer.setData("text/plain", id);
     e.dataTransfer.dropEffect = "copy";
   };
-  const handleOnDrop = (e: DragEventType, dateStr: string) => {
+  const handleOnDrop = (
+    e: DragEventType,
+    dateStr: string,
+    weekRow: number = 0
+  ) => {
     const id = e.dataTransfer.getData("text/plain");
-    dispatch({ type: "SWAP_EVENT", payload: { id, dateStr } });
+    dispatch({ type: "SWAP_EVENT", payload: { id, dateStr, weekRow } });
   };
   const handleOnDragOver = (e: DragEventType) => {
     e.preventDefault();
@@ -260,6 +264,9 @@ const HomePage: React.FC<{}> = () => {
             weekDays={["m", "t", "w", "t", "f", "s", "s"]}
             events={formattedWeeks[0]}
             onCellEventClick={handleCellEventClick}
+            onDragOver={handleOnDragOver}
+            onDragStart={handleOnDragStart}
+            onDrop={handleOnDrop}
             onClick={handleWeekOnClick}
           />
         )}

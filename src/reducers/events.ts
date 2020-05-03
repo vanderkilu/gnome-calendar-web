@@ -15,10 +15,15 @@ export const EventInitialState = {
 const transformEvents = (
   events: IEvent[],
   id: string,
-  dateStr: string
+  dateStr: string,
+  weekRow: number
 ): IEvent[] => {
+  console.log("weekRow", weekRow);
   const event = events.find(event => event.id === id);
-  const newEvent = { ...event, ...{ date: dateStr } } as IEvent;
+  const newEvent = {
+    ...event,
+    ...{ date: dateStr, weekRow: weekRow }
+  } as IEvent;
   return events.map(event => (event.id === id ? newEvent : event));
 };
 
@@ -30,7 +35,10 @@ export type EventAction =
   | { type: "ADD_EVENT"; payload: { event: IEvent } }
   | { type: "UPDATE_EVENT"; payload: { event: IEvent } }
   | { type: "DELETE_EVENT"; payload: { id: string } }
-  | { type: "SWAP_EVENT"; payload: { id: string; dateStr: string } };
+  | {
+      type: "SWAP_EVENT";
+      payload: { id: string; dateStr: string; weekRow: number };
+    };
 
 export function EventReducer(
   state: EventState = EventInitialState,
@@ -79,7 +87,8 @@ export function EventReducer(
         events: transformEvents(
           state.events,
           action.payload.id,
-          action.payload.dateStr
+          action.payload.dateStr,
+          action.payload.weekRow
         )
       };
     default:
