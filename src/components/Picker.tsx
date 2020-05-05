@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import moment from "moment";
 import styled from "styled-components";
+import nextIcon from "../assets/next.svg"
+import backIcon from "../assets/back.svg"
 
 const StyledPicker = styled.div`
   position: relative;
@@ -65,6 +67,11 @@ const StyledDropdownItem = styled.button`
   color: #b8bac3;
   cursor: pointer;
 `;
+
+const StyledPickerIcon = styled.img`
+  width: 1rem;
+  height: 1rem;
+`
 
 export const StyledPickerGroup = styled.div`
   display: flex;
@@ -168,7 +175,7 @@ const Picker: React.FC<PickerProps> = ({ setDate, date, type }) => {
           }
           role="button"
         >
-          &larr;
+          <StyledPickerIcon src={backIcon} alt="back arrow icon"/>
         </ControlLeft>
         {value}
         <ControlRight
@@ -177,7 +184,7 @@ const Picker: React.FC<PickerProps> = ({ setDate, date, type }) => {
           }
           role="button"
         >
-          &rarr;
+          <StyledPickerIcon src={nextIcon} alt="next arrow icon" />
         </ControlRight>
         {isVisible && (
           <StyledDropdown>

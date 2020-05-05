@@ -30,17 +30,17 @@ const StyledWeekContainer = styled.div`
   grid-template-columns: repeat(7, 1fr);
 `;
 const Day = styled.div`
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   color: #b8bac3;
 `;
 const StyledHeaderElement = styled.div`
   border: 1px solid #f3f4f9;
   border-top: none;
   border-bottom: none;
-  height: 10rem;
+  min-height: 5rem;
 `;
 const StyledHeaderText = styled.h3`
-  font-size: 1.7rem;
+  font-size: 1.2rem;
   text-transform: uppercase;
   color: #424242;
 `;

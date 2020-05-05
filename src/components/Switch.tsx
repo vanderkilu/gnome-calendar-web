@@ -6,8 +6,9 @@ const StyledSwitch = styled.button`
   border: 1px solid #b8bac3;
   border-radius: 5px;
   background-color: transparent;
-  font-size: 1.2rem;
   font: inherit;
+  font-size: 1.2rem;
+  text-transform: capitalize;
   &:nth-child(1) {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;

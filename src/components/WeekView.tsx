@@ -7,21 +7,10 @@ const StyledWeekLayout = styled.div`
   display: grid;
   grid-template-columns: 10rem 1fr;
 `;
-const StyledHeaderElement = styled.div`
-  border: 1px solid #f3f4f9;
-  border-top: none;
-  border-bottom: none;
-  height: 10rem;
-`;
 const StyledText = styled.h3<{ align?: string }>`
-  font-size: 1.5rem;
-  color: #b8bac3;
-  text-align: ${props => props.align || "left"};
-`;
-const StyledHeaderText = styled.h3`
-  font-size: 1.7rem;
-  text-transform: uppercase;
+  font-size: 1.2rem;
   color: #424242;
+  text-align: ${props => props.align || "left"};
 `;
 const StyledWeekContainer = styled.div`
   display: grid;
@@ -63,7 +52,6 @@ const StyledSidebarContainer = styled.div`
 type DragEventType = React.DragEvent<HTMLDivElement>;
 
 interface HeaderProps {
-  weekDays: string[];
   events: ICell[];
   onCellEventClick: (id: string) => void;
   onClick: (date: string, weekRow: number, position?: IPosition) => void;
@@ -139,7 +127,6 @@ const WeekCell: React.FC<WeekCellProps> = ({
 };
 
 const WeekView: React.FC<HeaderProps> = ({
-  weekDays,
   events,
   onCellEventClick,
   onClick,
