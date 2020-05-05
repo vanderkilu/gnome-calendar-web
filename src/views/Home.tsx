@@ -3,9 +3,9 @@ import Picker, {
   StyledPickerWrapper,
   StyledPickerGroup
 } from "../components/Picker";
-import CalendarCell, { CellEvent } from "../components/CalendarCell";
+import MonthView, { CellEvent } from "../components/CalendarCell";
 import {
-  CalendarHeaderDay,
+  CalendarHeaderMonth,
   CalendarHeaderWeek
 } from "../components/CalendarHeader";
 import useCalendar from "../hooks/useCalendar";
@@ -143,6 +143,8 @@ const HomePage: React.FC<{}> = () => {
     state.events
   );
 
+  const [view, setView] = useState("month");
+
   const updateDate = (type: moment.unitOfTime.All, index: number) => {
     setDate(moment(date).set(type, index));
   };
@@ -233,7 +235,9 @@ const HomePage: React.FC<{}> = () => {
   };
 
   const hasTask = formEvent.event.task.name !== "";
-  const switchView = (id: string) => {};
+  const switchView = (id: string) => {
+    setView(id);
+  };
 
   return (
     <>
@@ -241,22 +245,19 @@ const HomePage: React.FC<{}> = () => {
         <StyledPickerWrapper>
           <H3>task calendar</H3>
           <StyledGroupSwitch>
-            <Switch id="week" onClick={switchView} />
-            <Switch id="month" onClick={switchView} />
-            <Switch id="year" onClick={switchView} />
+            <Switch id="week" onClick={() => switchView("week")} />
+            <Switch id="month" onClick={() => switchView("month")} />
+            <Switch id="year" onClick={() => switchView("year")} />
           </StyledGroupSwitch>
           <StyledPickerGroup>
             <Picker date={date} type="month" setDate={updateDate} key={ID()} />
             <Picker date={date} type="year" setDate={updateDate} key={ID()} />
           </StyledPickerGroup>
         </StyledPickerWrapper>
-        {false ? (
-          <CalendarHeaderDay />
-        ) : (
-          <CalendarHeaderWeek events={formattedWeeks[0]} />
-        )}
-        {false ? (
-          <CalendarCell
+        {view === "month" && <CalendarHeaderMonth />}
+        {view === "week" && <CalendarHeaderWeek events={formattedWeeks[0]} />}
+        {view === "month" ? (
+          <MonthView
             days={formattedDays}
             today={todayDate}
             onClick={handleOnClick}

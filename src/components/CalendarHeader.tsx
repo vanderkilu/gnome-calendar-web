@@ -25,13 +25,9 @@ const Header = styled.div<{
       margin-left: ${props.adjust}rem;
     `}
 `;
-const StyledWeekContainer = styled.div`
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-`;
 const Day = styled.div`
   font-size: 1.2rem;
-  color: #b8bac3;
+  color: #424242;
 `;
 const StyledHeaderElement = styled.div`
   border: 1px solid #f3f4f9;
@@ -46,7 +42,7 @@ const StyledHeaderText = styled.h3`
 `;
 const weekDays = moment.weekdaysShort();
 
-export const CalendarHeaderDay: React.FC<{}> = () => {
+export const CalendarHeaderMonth: React.FC<{}> = () => {
   return (
     <>
       <Header>
