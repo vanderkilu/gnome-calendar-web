@@ -30,10 +30,6 @@ const StyledWeekCell = styled.div`
 const StyledWeekCellText = styled.p`
   font-size: 1.2rem;
   color: "#b8bac3";
-  width: 80%;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 `;
 
 const StyledWeekCellEvent = styled.div`

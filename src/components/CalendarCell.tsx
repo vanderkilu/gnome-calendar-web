@@ -29,10 +29,13 @@ export const CellEvent = styled.div`
   padding: 0.5rem;
   border-radius: 2px;
   background-color: #e8f5e9;
+  margin-bottom: 0.2rem;
+  cursor: pointer;
+  overflow: hidden;
+`;
+const CellEventText = styled.p`
   font-size: 1rem;
   color: #81c784;
-  margin-bottom: 0.5rem;
-  cursor: pointer;
 `;
 const CellManyEvent = styled.div`
   color: "#b8bac3";
@@ -120,7 +123,9 @@ export const Cell: React.FC<CellProps> = ({
             onDragStart={(e: DragEventType) => onDragStart(e, event.id)}
             key={ID()}
           >
-            {event && event.task && event.task.name}
+            {event && event.task && (
+              <CellEventText>{event.task.name}</CellEventText>
+            )}
           </CellEvent>
         ))}
       {isManyEvents && (
