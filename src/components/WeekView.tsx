@@ -59,7 +59,6 @@ const StyledWeekCellEvent = styled.div`
 `;
 const StyledSidebarContainer = styled.div`
   grid-row: 1 / span 2;
-  margin-top: 10rem;
 `;
 type DragEventType = React.DragEvent<HTMLDivElement>;
 
@@ -158,14 +157,6 @@ const WeekView: React.FC<HeaderProps> = ({
             </StyledWeekCell>
           ))}
         </StyledSidebarContainer>
-        <StyledWeekContainer>
-          {weekDays.map((weekName, i) => (
-            <StyledHeaderElement key={i}>
-              <StyledHeaderText>{weekName}</StyledHeaderText>
-              <StyledHeaderText>{events[i].day}</StyledHeaderText>
-            </StyledHeaderElement>
-          ))}
-        </StyledWeekContainer>
         <StyledWeekContainer>
           {times.map((_, i) =>
             events.map(eventItem => (

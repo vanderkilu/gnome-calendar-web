@@ -3,8 +3,11 @@ import Picker, {
   StyledPickerWrapper,
   StyledPickerGroup
 } from "../components/Picker";
-import CalendarCell, { CellEvent, Cell } from "../components/CalendarCell";
-import CalendarHeader from "../components/CalendarHeader";
+import CalendarCell, { CellEvent } from "../components/CalendarCell";
+import {
+  CalendarHeaderDay,
+  CalendarHeaderWeek
+} from "../components/CalendarHeader";
 import useCalendar from "../hooks/useCalendar";
 import { useEvents } from "../contexts/event";
 import { ID } from "../utils";
@@ -247,7 +250,11 @@ const HomePage: React.FC<{}> = () => {
             <Picker date={date} type="year" setDate={updateDate} key={ID()} />
           </StyledPickerGroup>
         </StyledPickerWrapper>
-        <CalendarHeader />
+        {false ? (
+          <CalendarHeaderDay />
+        ) : (
+          <CalendarHeaderWeek events={formattedWeeks[0]} />
+        )}
         {false ? (
           <CalendarCell
             days={formattedDays}
