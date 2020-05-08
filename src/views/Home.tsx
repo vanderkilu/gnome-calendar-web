@@ -144,9 +144,18 @@ const HomePage: React.FC<{}> = () => {
   );
 
   const [view, setView] = useState("month");
+  const [weekIndex, setWeekIndex] = useState(0);
 
   const updateDate = (type: moment.unitOfTime.All, index: number) => {
-    setDate(moment(date).set(type, index));
+    if (view === "week") {
+      if (weekIndex < 3) setWeekIndex(weekIndex => weekIndex + 1);
+      else {
+        setDate(moment(date).set(type, index));
+        setWeekIndex(weekIndex => weekIndex % 3);
+      }
+    } else {
+      setDate(moment(date).set(type, index));
+    }
   };
   const handleOnClick = (date: string, position?: IPosition) => {
     setFormEvent({ type: "RESET_NAME" });
@@ -255,7 +264,9 @@ const HomePage: React.FC<{}> = () => {
           </StyledPickerGroup>
         </StyledPickerWrapper>
         {view === "month" && <CalendarHeaderMonth />}
-        {view === "week" && <CalendarHeaderWeek events={formattedWeeks[0]} />}
+        {view === "week" && (
+          <CalendarHeaderWeek events={formattedWeeks[weekIndex]} />
+        )}
         {view === "month" ? (
           <MonthView
             days={formattedDays}
@@ -269,7 +280,7 @@ const HomePage: React.FC<{}> = () => {
           />
         ) : (
           <WeekView
-            events={formattedWeeks[0]}
+            events={formattedWeeks[weekIndex]}
             onCellEventClick={handleCellEventClick}
             onDragOver={handleOnDragOver}
             onDragStart={handleOnDragStart}
