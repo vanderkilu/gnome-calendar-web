@@ -10,6 +10,7 @@ const StyledMonthContainer = styled.div`
 const StyledMonthHeader = styled.h3`
   font-size: 1.5rem;
   color: #c8e6c9;
+  text-align: center;
 `;
 const StyledDayContainer = styled.div`
   display: grid;
@@ -26,6 +27,7 @@ const StyledText = styled.p`
 const StyledYearContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr 20rem;
+  margin-top: 5rem;
 `;
 const StyledYearContent = styled.div`
   display: grid;
@@ -45,11 +47,15 @@ const MonthView: React.FC<MonthProps> = ({ days, month }) => {
       <StyledMonthContainer>
         <StyledMonthHeader>{month}</StyledMonthHeader>
         <StyledDayContainer>
-          {days.map(day => (
-            <StyledDay key={day}>
-              <StyledText>{day}</StyledText>
-            </StyledDay>
-          ))}
+          {days.map(day =>
+            day === 0 ? (
+              <StyledDay key={day}></StyledDay>
+            ) : (
+              <StyledDay key={day}>
+                <StyledText>{day}</StyledText>
+              </StyledDay>
+            )
+          )}
         </StyledDayContainer>
       </StyledMonthContainer>
     </>
