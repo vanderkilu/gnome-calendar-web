@@ -51,7 +51,7 @@ export const generateDates = (date: moment.Moment) => {
   return Array.from(Array(10).keys()).map(index => {
     //set the date to reflect next month
     // generate all days for the month
-    moment(date).set("month", index);
+    date = moment(date).set("month", index);
     const { days, dayDate } = generateMonthDays(date);
     return {
       month: monthString(index),

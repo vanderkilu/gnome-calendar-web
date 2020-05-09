@@ -46,7 +46,7 @@ const MonthView: React.FC<MonthProps> = ({ days, month }) => {
         <StyledMonthHeader>{month}</StyledMonthHeader>
         <StyledDayContainer>
           {days.map(day => (
-            <StyledDay>
+            <StyledDay key={day}>
               <StyledText>{day}</StyledText>
             </StyledDay>
           ))}
@@ -67,7 +67,12 @@ const YearView: React.FC<YearProps> = ({ date }) => {
       <StyledYearContainer>
         <StyledYearContent>
           {monthDates.map(({ month, days, dayDate }) => (
-            <MonthView days={days} month={month} dayDate={dayDate} />
+            <MonthView
+              days={days}
+              month={month}
+              dayDate={dayDate}
+              key={month}
+            />
           ))}
         </StyledYearContent>
       </StyledYearContainer>
