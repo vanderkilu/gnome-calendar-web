@@ -3,6 +3,10 @@ import styled from "styled-components";
 import moment from "moment";
 import { generateDates } from "../utils";
 
+const StyledMonthContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
 const StyledMonthHeader = styled.h3`
   font-size: 1.5rem;
   color: #c8e6c9;
@@ -10,10 +14,10 @@ const StyledMonthHeader = styled.h3`
 const StyledDayContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  grid-column-gap: 1rem;
+  grid-column-gap: 0;
 `;
 const StyledDay = styled.div`
-  padding: 1rem;
+  margin: 0rem;
 `;
 const StyledText = styled.p`
   font-size: 1.2rem;
@@ -38,18 +42,16 @@ interface MonthProps {
 const MonthView: React.FC<MonthProps> = ({ days, month }) => {
   return (
     <>
-      <StyledMonthHeader>{month}</StyledMonthHeader>
-      <StyledDayContainer>
-        {days.map(day =>
-          day > 0 ? (
-            <StyledDay></StyledDay>
-          ) : (
+      <StyledMonthContainer>
+        <StyledMonthHeader>{month}</StyledMonthHeader>
+        <StyledDayContainer>
+          {days.map(day => (
             <StyledDay>
               <StyledText>{day}</StyledText>
             </StyledDay>
-          )
-        )}
-      </StyledDayContainer>
+          ))}
+        </StyledDayContainer>
+      </StyledMonthContainer>
     </>
   );
 };
