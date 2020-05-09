@@ -19,6 +19,7 @@ import { StyledFooter } from "../components/TaskModal";
 import Button from "../components/Button";
 import Switch, { StyledGroupSwitch } from "../components/Switch";
 import WeekView from "../components/WeekView";
+import YearView from "../components/YearView";
 
 import styled from "styled-components";
 import moment from "moment";
@@ -267,7 +268,7 @@ const HomePage: React.FC<{}> = () => {
         {view === "week" && (
           <CalendarHeaderWeek events={formattedWeeks[weekIndex]} />
         )}
-        {view === "month" ? (
+        {view === "month" && (
           <MonthView
             days={formattedDays}
             today={todayDate}
@@ -278,7 +279,8 @@ const HomePage: React.FC<{}> = () => {
             onDrop={handleOnDrop}
             onDragOver={handleOnDragOver}
           />
-        ) : (
+        )}
+        {view === "week" && (
           <WeekView
             events={formattedWeeks[weekIndex]}
             onCellEventClick={handleCellEventClick}
@@ -288,6 +290,7 @@ const HomePage: React.FC<{}> = () => {
             onClick={handleWeekOnClick}
           />
         )}
+        {view === "year" && <YearView date={date} />}
       </StyledCalendarContainer>
       <TaskModal
         isOpen={formEvent.isBriefVisible}

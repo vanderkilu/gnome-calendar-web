@@ -9,8 +9,6 @@ export const ID = () => {
   );
 };
 
-let date: moment.Moment;
-
 const generateMonthDays = (date: moment.Moment) => {
   const firstDayOfMonth = (): number => {
     const day = moment(date)
@@ -49,8 +47,8 @@ const monthString = (index: number) => {
   return months[index];
 };
 
-export const generateDates = () => {
-  Array.from(Array(10).keys()).map(index => {
+export const generateDates = (date: moment.Moment) => {
+  return Array.from(Array(10).keys()).map(index => {
     //set the date to reflect next month
     // generate all days for the month
     moment(date).set("month", index);
