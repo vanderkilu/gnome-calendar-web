@@ -19,10 +19,16 @@ const StyledDayContainer = styled.div`
 `;
 const StyledDay = styled.div`
   margin: 0rem;
+  cursor: pointer;
 `;
-const StyledText = styled.p`
+const StyledText = styled.p<{ isToday: boolean }>`
   font-size: 1.2rem;
+  padding: 0.1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   color: #424242;
+  background-color: ${props => props.isToday && "#c8e6c9"};
 `;
 const StyledYearContainer = styled.div`
   display: grid;
@@ -38,10 +44,17 @@ const StyledYearContent = styled.div`
 interface MonthProps {
   days: number[];
   month: string;
+  currentDay: number;
+  currentMonth: string;
   dayDate?: (day: number) => string;
 }
 
-const MonthView: React.FC<MonthProps> = ({ days, month }) => {
+const MonthView: React.FC<MonthProps> = ({
+  days,
+  month,
+  currentDay,
+  currentMonth
+}) => {
   return (
     <>
       <StyledMonthContainer>
@@ -52,7 +65,11 @@ const MonthView: React.FC<MonthProps> = ({ days, month }) => {
               <StyledDay key={day}></StyledDay>
             ) : (
               <StyledDay key={day}>
-                <StyledText>{day}</StyledText>
+                <StyledText
+                  isToday={day === currentDay && month === currentMonth}
+                >
+                  {day}
+                </StyledText>
               </StyledDay>
             )
           )}
@@ -72,14 +89,18 @@ const YearView: React.FC<YearProps> = ({ date }) => {
     <>
       <StyledYearContainer>
         <StyledYearContent>
-          {monthDates.map(({ month, days, dayDate }) => (
-            <MonthView
-              days={days}
-              month={month}
-              dayDate={dayDate}
-              key={month}
-            />
-          ))}
+          {monthDates.map(
+            ({ month, days, dayDate, currentDay, currentMonth }) => (
+              <MonthView
+                days={days}
+                month={month}
+                dayDate={dayDate}
+                currentDay={currentDay}
+                currentMonth={currentMonth}
+                key={month}
+              />
+            )
+          )}
         </StyledYearContent>
       </StyledYearContainer>
     </>

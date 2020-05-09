@@ -27,7 +27,9 @@ const generateMonthDays = (date: moment.Moment) => {
       .set("date", day)
       .toString();
   };
-  return { days, dayDate };
+  const currentDay = parseInt(date.format("D"));
+  const currentMonth = moment().format("MMM");
+  return { days, dayDate, currentDay, currentMonth };
 };
 
 const monthString = (index: number) => {
@@ -52,11 +54,13 @@ export const generateDates = (date: moment.Moment) => {
     //set the date to reflect next month
     // generate all days for the month
     date = moment(date).set("month", index);
-    const { days, dayDate } = generateMonthDays(date);
+    const { days, dayDate, currentDay, currentMonth } = generateMonthDays(date);
     return {
       month: monthString(index),
       days,
-      dayDate
+      dayDate,
+      currentDay,
+      currentMonth
     };
   });
 };
