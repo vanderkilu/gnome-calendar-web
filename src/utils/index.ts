@@ -49,6 +49,29 @@ const monthString = (index: number) => {
   return months[index];
 };
 
+const yearRange = (start: string, end: string) => {
+  let startDate = moment(start);
+  const endDate = moment(end);
+  let nextYears: string[] = [];
+  while (startDate < endDate) {
+    nextYears = [
+      ...nextYears,
+      moment(startDate)
+        .format("YYYY")
+        .toString()
+    ];
+    startDate = moment(startDate).add("year", 1);
+  }
+  return nextYears;
+};
+
+const nextTen = moment()
+  .set("year", 2020) // 2020 represent current year
+  .add("year", 12)
+  .format("Y");
+
+export const nextYears = yearRange("2020", nextTen);
+
 export const generateDates = (date: moment.Moment) => {
   return Array.from(Array(11).keys()).map(index => {
     //set the date to reflect next month

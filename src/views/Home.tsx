@@ -148,6 +148,7 @@ const HomePage: React.FC<{}> = () => {
   const [weekIndex, setWeekIndex] = useState(0);
 
   const updateDate = (type: moment.unitOfTime.All, index: number) => {
+    console.log("index", index);
     if (view === "week") {
       if (weekIndex < 3) setWeekIndex(weekIndex => weekIndex + 1);
       else {

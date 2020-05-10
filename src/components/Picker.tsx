@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import moment from "moment";
 import styled from "styled-components";
-import nextIcon from "../assets/next.svg"
-import backIcon from "../assets/back.svg"
+import nextIcon from "../assets/next.svg";
+import backIcon from "../assets/back.svg";
 
 const StyledPicker = styled.div`
   position: relative;
@@ -39,39 +39,11 @@ const ControlRight = styled.span`
   padding: 2rem 0;
   cursor: pointer;
 `;
-const StyledDropdown = styled.div`
-  position: absolute;
-  top: 3.2rem;
-  left: auto;
-  width: 100%;
-  height: 10rem;
-  overflow-y: scroll;
-  background-color: #fafafa;
-  display: grid;
-  grid-template-columns: 1fr;
-  padding: 2rem;
-  grid-gap: 2rem;
-  z-index: 1;
-  &::-webkit-scrollbar {
-    display: none;
-  }
-`;
-const StyledDropdownItem = styled.button`
-  font: inherit;
-  border-radius: 3px;
-  text-align: center;
-  height: 3rem;
-  background-color: #ffffff;
-  border: none;
-  border: 1px dashed #bdbdbd;
-  color: #b8bac3;
-  cursor: pointer;
-`;
 
 const StyledPickerIcon = styled.img`
   width: 1rem;
   height: 1rem;
-`
+`;
 
 export const StyledPickerGroup = styled.div`
   display: flex;
@@ -94,7 +66,6 @@ interface PickerProps {
 }
 
 const Picker: React.FC<PickerProps> = ({ setDate, date, type }) => {
-  const [isVisible, setVisible] = useState(false);
   const months = moment.months();
   let [index, setIndex] = useState(moment(date).month());
   const setNextMonth = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
@@ -117,65 +88,31 @@ const Picker: React.FC<PickerProps> = ({ setDate, date, type }) => {
       setDate("month", index);
     }
   };
-  const getCurrentYear = () => moment().format("Y");
-  const yearRange = (start: string, end: string) => {
-    let startDate = moment(start);
-    const endDate = moment(end);
-    let nextYears: string[] = [];
-    while (startDate < endDate) {
-      nextYears = [
-        ...nextYears,
-        moment(startDate)
-          .format("YYYY")
-          .toString()
-      ];
-      startDate = moment(startDate).add("year", 1);
-    }
-    return nextYears;
-  };
-  const nextTen = moment()
-    .set("year", parseInt(getCurrentYear()))
-    .add("year", 12)
-    .format("Y");
+  const getCurrentYear = () => moment(date).format("Y");
 
-  const nextYears = yearRange(getCurrentYear(), nextTen);
-  const [year, setYear] = useState(parseInt(getCurrentYear()));
+  const year = parseInt(getCurrentYear());
 
   const setNextYear = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
     e.stopPropagation();
-    if (year < parseInt(nextTen)) {
-      setYear(year + 1);
-      setDate("year", index + 1);
-    } else {
-      setYear(parseInt(nextTen));
-      setDate("year", parseInt(nextTen));
-    }
+    setDate("year", year + 1);
   };
 
   const setPrevYear = (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
     e.stopPropagation();
-    const currentYear = parseInt(getCurrentYear());
-    if (year > currentYear) {
-      setYear(year - 1);
-      setDate("year", year - 1);
-    } else {
-      setYear(year);
-      setDate("year", year);
-    }
+    setDate("year", year - 1);
   };
 
-  const valueList = type === "month" ? months : nextYears;
   const value = type === "month" ? months[index] : year;
   return (
     <>
-      <StyledPicker onClick={() => setVisible(isVisible => !isVisible)}>
+      <StyledPicker>
         <ControlLeft
           onClick={(e: React.MouseEvent<HTMLSpanElement, MouseEvent>) =>
             type === "month" ? setPrevMonth(e) : setPrevYear(e)
           }
           role="button"
         >
-          <StyledPickerIcon src={backIcon} alt="back arrow icon"/>
+          <StyledPickerIcon src={backIcon} alt="back arrow icon" />
         </ControlLeft>
         {value}
         <ControlRight
@@ -186,13 +123,6 @@ const Picker: React.FC<PickerProps> = ({ setDate, date, type }) => {
         >
           <StyledPickerIcon src={nextIcon} alt="next arrow icon" />
         </ControlRight>
-        {isVisible && (
-          <StyledDropdown>
-            {valueList.map(value => (
-              <StyledDropdownItem>{value}</StyledDropdownItem>
-            ))}
-          </StyledDropdown>
-        )}
       </StyledPicker>
     </>
   );
