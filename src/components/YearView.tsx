@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import moment from "moment";
 import { generateDates } from "../utils";
+import { IEvent } from "../types";
 
 const StyledMonthContainer = styled.div`
   display: flex;
@@ -40,21 +41,47 @@ const StyledYearContent = styled.div`
   grid-template-columns: repeat(4, 1fr);
   grid-column-gap: 3rem;
 `;
+const StyledYearEventContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid #e0e0e0;
+  padding-left: 2rem;
+`;
+const StyledEventDate = styled.h3`
+  font-size: 1.4rem;
+  color: #424242;
+`;
+const StyledEventItem = styled.div`
+  padding: 0.5rem;
+  border-radius: 2px;
+  background-color: #e8f5e9;
+  color: #81c784;
+  cursor: pointer;
+  margin-right: 0.1rem;
+  margin-bottom: 0.4rem;
+`;
 
 interface MonthProps {
   days: number[];
   month: string;
   currentDay: number;
   currentMonth: string;
-  dayDate?: (day: number) => string;
+  dayDate: (day: number) => string;
+  onClick: (date: string) => void;
 }
 
 const MonthView: React.FC<MonthProps> = ({
   days,
   month,
   currentDay,
-  currentMonth
+  currentMonth,
+  dayDate,
+  onClick
 }) => {
+  const handleOnClick = (day: number) => {
+    const date = dayDate(day);
+    onClick(date);
+  };
   return (
     <>
       <StyledMonthContainer>
@@ -64,7 +91,7 @@ const MonthView: React.FC<MonthProps> = ({
             day === 0 ? (
               <StyledDay key={day}></StyledDay>
             ) : (
-              <StyledDay key={day}>
+              <StyledDay key={day} onClick={() => handleOnClick(day)}>
                 <StyledText
                   isToday={day === currentDay && month === currentMonth}
                 >
@@ -81,10 +108,19 @@ const MonthView: React.FC<MonthProps> = ({
 
 interface YearProps {
   date: moment.Moment;
+  events: IEvent[];
+  onCellEventClick: (id: string) => void;
 }
 
-const YearView: React.FC<YearProps> = ({ date }) => {
+const YearView: React.FC<YearProps> = ({ date, events, onCellEventClick }) => {
   const monthDates = generateDates(date);
+  const [selectedDate, setSelectedDate] = useState("");
+  const eventsForDate = events.filter(event => event.date === selectedDate);
+  const formattedDate = moment(selectedDate).format("DD/MMM/YYYY");
+  const handleOnClick = (date: string) => {
+    setSelectedDate(date);
+  };
+
   return (
     <>
       <StyledYearContainer>
@@ -97,11 +133,22 @@ const YearView: React.FC<YearProps> = ({ date }) => {
                 dayDate={dayDate}
                 currentDay={currentDay}
                 currentMonth={currentMonth}
+                onClick={handleOnClick}
                 key={month}
               />
             )
           )}
         </StyledYearContent>
+        <StyledYearEventContainer>
+          {selectedDate !== "" && (
+            <StyledEventDate>{formattedDate}</StyledEventDate>
+          )}
+          {eventsForDate.map(event => (
+            <StyledEventItem onClick={() => onCellEventClick(event.id)}>
+              {event.task.name}
+            </StyledEventItem>
+          ))}
+        </StyledYearEventContainer>
       </StyledYearContainer>
     </>
   );

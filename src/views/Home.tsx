@@ -290,7 +290,13 @@ const HomePage: React.FC<{}> = () => {
             onClick={handleWeekOnClick}
           />
         )}
-        {view === "year" && <YearView date={date} />}
+        {view === "year" && (
+          <YearView
+            date={date}
+            events={state.events}
+            onCellEventClick={handleCellEventClick}
+          />
+        )}
       </StyledCalendarContainer>
       <TaskModal
         isOpen={formEvent.isBriefVisible}
