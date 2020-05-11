@@ -1,4 +1,4 @@
-## GNOME CALENDAR WEB(Clone of the gnome calendar app on linux in react)
+## GNOME CALENDAR WEB.
 
 This is a clone of the linux gnome calendar app implemented in react and typescript entirely from scratch.
 work still in progress
@@ -37,6 +37,6 @@ work still in progress
 
 
 ###### THINGS TO ADD
-1.Persist changes
-2.Integrate google calendar
+1. Persist changes
+2. Integrate google calendar
 3. Add dark mode.
