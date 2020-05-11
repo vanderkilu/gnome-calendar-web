@@ -16,31 +16,37 @@ export const StyledCell = styled.div<{ isToday: boolean }>`
   justify-content: flex-start;
   align-items: flex-start;
   flex-direction: column;
-  padding-top: 0.5rem;
+  padding-top: 1.2rem;
 `;
 const CellText = styled.p`
   position: absolute;
-  right: 1rem;
-  top: 0.2rem;
-  font-size: 1.7rem;
+  right: 0.5rem;
+  top: -1rem;
+  font-size: 1.5rem;
   color: "#b8bac3";
 `;
 export const CellEvent = styled.div`
-  padding: 0.5rem;
+  padding: 0.4rem;
   border-radius: 2px;
   background-color: #e8f5e9;
   margin-bottom: 0.2rem;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
   cursor: pointer;
   overflow: hidden;
 `;
 const CellEventText = styled.p`
   font-size: 1rem;
   color: #81c784;
+  padding: 0;
+  margin: 0;
 `;
 const CellManyEvent = styled.div`
   color: "#b8bac3";
   font-size: 1.1rem;
   width: 100%;
+  margin-top: 1rem;
   cursor: pointer;
 `;
 
