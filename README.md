@@ -9,7 +9,7 @@ work still in progress
 2. Typescript
 3. Styled Components
 
-###### ROADMAP
+##### ROADMAP
 
 1. MonthView
 
@@ -36,7 +36,7 @@ work still in progress
 7. Drag and Drop
 
 
-###### THINGS TO ADD
+##### THINGS TO ADD
 1. Persist changes
 2. Integrate google calendar
 3. Add dark mode.
